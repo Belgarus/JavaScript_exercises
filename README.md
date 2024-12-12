@@ -1,2 +1,2 @@
 # exercise3
-learning JavaScript
+I will learn JavaScript 🌚
