@@ -8,3 +8,6 @@ button.onclick = function changeColor(){
             box.style.background = 'red';
         }
 } 
+
+let fun = 'Programming is fun!'
+console.log(fun)
