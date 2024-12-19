@@ -20,3 +20,11 @@ console.log(multiline2)
 
 const result = "Score: " + 100; // "Score: 100"
 console.log(result)
+
+const single = 'Single quotes';
+const double = "Double quotes";
+const backtick = `Backtick`;
+
+console.log(single);
+console.log(double);
+console.log(backtick);
