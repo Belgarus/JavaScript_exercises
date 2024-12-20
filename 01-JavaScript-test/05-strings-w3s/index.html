@@ -19,6 +19,10 @@
     <p>The sliced (extracted) part of the string is:</p>
     <p id="demo3"></p>
 
+    <h1>JavaScript String Methods</h1>
+    <p>The substr() method extract a part of a string and returns the extracted parts in a new string:</p>
+    <p id="demo4"></p>
+
     <script>
         let text = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         document.getElementById("demo").innerHTML = text.length;
@@ -29,6 +33,10 @@
         let text3 = "Apple, Banana, Kiwi";
         let part = text3.slice(7,13);
         document.getElementById("demo3").innerHTML = part; 
+
+        let text4 = "Apple, Banana, Kiwi";
+        let part2 = text4.slice(7,13);
+        document.getElementById("demo4").innerHTML = part2; 
     </script>
 
     </body>
