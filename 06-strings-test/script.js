@@ -5,18 +5,17 @@ document.getElementById("txtlnght").innerHTML = ABC.length
 
 //alert section
 let year = prompt('In which year was the ECMAScript-2015 specification published?', '');
+let numericYear = Number(year);
 
-if (year < 2015) {
-  alert( 'Too early...' );
-} else if (year > 2015) {
-  alert( 'Too late' );
-} else if (year === 'NaN'){
-    alert('not a number')
+if (isNaN(numericYear)) {
+  alert('Please enter a valid number.');
+} else if (numericYear < 2015) {
+  alert('Too early...');
+} else if (numericYear > 2015) {
+  alert('Too late');
+} else if (numericYear === 2015) {
+  alert('Exactly!');
 }
-else if(year === 2015) {
-  alert( 'Exactly!' );
-}
-
 
 //if/else color section
 function pressed() {
@@ -47,6 +46,7 @@ function pressed() {
     }
 }
 
+//acces controll
 let accessAllowed = age > 18;
 
 if (age < 3) {
