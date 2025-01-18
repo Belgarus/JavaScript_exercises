@@ -19,5 +19,7 @@ function pressed() {
 
     if (text == "red") {
     document.getElementById("header").style.color = "red";
+    } else {
+        document.getElementById("header").style.color = "rgb(193, 193, 193)";
     }
 }
