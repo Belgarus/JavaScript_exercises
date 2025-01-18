@@ -10,7 +10,10 @@ if (year < 2015) {
   alert( 'Too early...' );
 } else if (year > 2015) {
   alert( 'Too late' );
-} else {
+} else if (year === 'NaN'){
+    alert('not a number')
+}
+else if(year === 2015) {
   alert( 'Exactly!' );
 }
 
@@ -43,3 +46,15 @@ function pressed() {
         document.getElementById("header").style.color = "rgb(193, 193, 193)";
     }
 }
+
+let accessAllowed = age > 18;
+
+if (age < 3) {
+    message = 'Hi, baby!';
+  } else if (age < 18) {
+    message = 'Hello!';
+  } else if (age < 100) {
+    message = 'Greetings!';
+  } else {
+    message = 'What an unusual age!';
+  }
