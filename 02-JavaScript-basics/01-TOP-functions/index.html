@@ -10,16 +10,17 @@
 <body> 
 
 	<script alt="JavaScript">
-        let a = 5
-       let add7 = (a) => a + 7
+       let a = 5;
+       let add7 = (a) => a + 7;
                 console.log(add7(a));
 
-       let multiply = (a, b) => a * b
-                console.log(multiply(add7(a), 12))
-                
-       function capitalize() {
+       let multiply = (a, b) => a * b;
+                console.log(multiply(add7(a), 12));
 
-       }
+       function capitalize(str) {
+        return str.toLowerCase().charAt(0).toUpperCase() + str.toLowerCase().slice(1)
+           }
+                console.log(capitalize("heLLO WoRLd"));
     </script>
 </body>
 </html>
