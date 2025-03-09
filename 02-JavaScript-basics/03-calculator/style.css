@@ -1,0 +1,21 @@
+table, tr, td {
+    border: solid black 2px;
+    margin: 2px;   
+    background-color: gray;
+                    }
+
+table {display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 1;
+        }
+
+ td {padding: 40px 60px;}       
+
+body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgb(171, 167, 167);
+}
