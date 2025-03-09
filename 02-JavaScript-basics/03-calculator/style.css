@@ -10,7 +10,8 @@ td {border: solid black 2px;
 }
     
 
- input{padding: 30px 45px;}   
+ input{padding: 30px 45px;
+            }   
 
 table {display: flex;
             align-items: center;
@@ -24,4 +25,13 @@ body {
             align-items: center;
             justify-content: center;
             background-color: rgb(171, 167, 167);
+            font-weight: 900;
 }
+
+.top {display: flex;
+    gap: 2px;
+    border: 0;
+    justify-content: center;
+    align-content: stretch;
+}
+
