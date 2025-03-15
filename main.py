@@ -24,3 +24,5 @@ more than just one line
 
 a = "hey"
 print(a)
+
+b = str('hey')
