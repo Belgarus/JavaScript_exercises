@@ -26,3 +26,4 @@ a = "hey"
 print(a)
 
 b = str('hey')
+print(b)
