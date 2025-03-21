@@ -23,8 +23,10 @@ function getComputerChoice() {
   console.log(computerScore(1))
 
   function playRound(humanChoice, computerChoice) {
-    let humanChoice = humanChoice()
-    let computerChoice = computerChoice()
+
   }
+  
+const humanChoice = humanChoice()
+const computerChoice = computerChoice()
 
   
