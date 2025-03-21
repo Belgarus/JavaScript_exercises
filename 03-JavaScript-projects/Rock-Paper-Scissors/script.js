@@ -20,13 +20,20 @@ function getComputerChoice() {
         return cS
   }
 
-  console.log(computerScore(1))
+const humanChoice = getHumanChoice()
+const computerChoice = getComputerChoice()
 
   function playRound(humanChoice, computerChoice) {
 
+    const rock = "rock".ignoreCase;
+    const paper = "paper".ignoreCase;
+    const scissors = "scissors".ignoreCase;
+
+    if (humanChoice === rock && computerChoice === scissors){
+        console.log("You won! Rock defeats Scissors.")
+    }
   }
-  
-const humanChoice = humanChoice()
-const computerChoice = computerChoice()
+
+
 
   
