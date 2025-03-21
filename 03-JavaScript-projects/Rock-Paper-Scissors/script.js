@@ -11,3 +11,13 @@ function getComputerChoice() {
 
   console.log(getHumanChoice())
 
+  function humanScore(Int) {
+        let hS = 0 + Int
+  }
+
+  function computerScore(Int) {
+        let cS = 0 + Int
+        return cS
+  }
+
+  console.log(computerScore(1))
