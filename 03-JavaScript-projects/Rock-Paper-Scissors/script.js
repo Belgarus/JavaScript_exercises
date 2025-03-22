@@ -13,8 +13,12 @@ function getComputerChoice() {
   
   let humanScore = 0;
   let computerScore = 0;
-  
+  let Round = 0;
+  let RoundCount = () => ++Round
+
   function playGame() {
+    RoundCount;
+
     // Inkrementfunktionen greifen direkt auf die globalen Variablen zu.
     let incHumanScore = () => ++humanScore;
     let incComputerScore = () => ++computerScore;
@@ -63,4 +67,6 @@ function getComputerChoice() {
     console.warn("Computer Score: " + computerScore);
   }
   
-  playGame();  
+  for (Round = 0; RoundCount() < 6;) {
+    playGame();  
+  }
