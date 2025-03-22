@@ -9,7 +9,7 @@ function getComputerChoice() {
     return HumanChoice
   }
 
-  console.log(getHumanChoice())
+  //console.log("Human Choice:" + " " + getHumanChoice())
 
   function humanScore(Int) {
         let hS = 0 + Int
@@ -20,20 +20,20 @@ function getComputerChoice() {
         return cS
   }
 
-const humanChoice = getHumanChoice()
-const computerChoice = getComputerChoice()
+function playRound(humanChoice, computerChoice) {
 
-  function playRound(humanChoice, computerChoice) {
-
-    const rock = "rock".ignoreCase;
-    const paper = "paper".ignoreCase;
-    const scissors = "scissors".ignoreCase;
-
-    if (humanChoice === rock && computerChoice === scissors){
-        console.log("You won! Rock defeats Scissors.")
+    console.log("Human Choice:" + " " + humanChoice)
+    console.log("Computer Choice:" + " " + computerChoice)
+    
+    if (humanChoice === "Rock" && computerChoice === "Scissors"){
+        return "You won! Rock defeats Scissors."
+    } else {
+        return "invalid input"
     }
   }
 
+  console.log(playRound(getHumanChoice(), getComputerChoice()))
+  
 
 
   
