@@ -35,23 +35,23 @@ function getComputerChoice() {
         incComputerScore();
         return "You lost! Rocks get wrapped by Papers.";
       } else if (humanChoice === "Rock" && computerChoice === "Rock") {
-        return "Patt, Rock and Rock!";
+        return "Draw, Rock and Rock!";
       } else if (humanChoice === "Paper" && computerChoice === "Rock") {
         incHumanScore();
         return "You won! Papers wrap Rocks.";
       } else if (humanChoice === "Paper" && computerChoice === "Paper") {
-        return "Patt, Paper and Paper!";
+        return "Draw, Paper and Paper!";
       } else if (humanChoice === "Paper" && computerChoice === "Scissors") {
         incComputerScore();
         return "You lost! Paper gets cut by Scissors.";
-      } else if (humanChoice === "Scissors" && computerChoice === "Rock") {
+      } else if (humanChoice === "Scissors" || "Scissor" && computerChoice === "Rock") {
         incComputerScore();
         return "You lost! Scissors get crushed by Rocks.";
-      } else if (humanChoice === "Scissors" && computerChoice === "Paper") {
+      } else if (humanChoice === "Scissors" || "Scissor" && computerChoice === "Paper") {
         incHumanScore();
         return "You won! Scissors cut Paper.";
-      } else if (humanChoice === "Scissors" && computerChoice === "Scissors") {
-        return "Patt, Scissors and Scissors.";
+      } else if (humanChoice === "Scissors" || "Scissor" && computerChoice === "Scissors") {
+        return "Draw, Scissors and Scissors.";
       } else {
         return "invalid input";
       }
