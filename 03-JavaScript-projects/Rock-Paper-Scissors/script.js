@@ -3,64 +3,64 @@ function getComputerChoice() {
     const randomIndex = Math.floor(Math.random() * choices.length);
     return choices[randomIndex];
   }
-
-function getHumanChoice() {
-    let HumanInput = prompt("Rock, Paper or Scissors?");
-    let HumanChoice = HumanInput.at(0).toUpperCase() + HumanInput.slice(1).toLowerCase();
-    return HumanChoice;
+  
+  function getHumanChoice() {
+    let humanInput = prompt("Rock, Paper or Scissors?");
+    // Prüft ob humanInput einen gültigen Wert enthält.
+    let humanChoice = humanInput.at(0).toUpperCase() + humanInput.slice(1).toLowerCase();
+    return humanChoice;
   }
-
+  
   let humanScore = 0;
   let computerScore = 0;
-  let x, y = 0
-
-function playGame() {
-
-let incHumanScore = () => ++humanScore;
-//console.log("Human Score:" + incHumanScore(humanScore))
-
-let incComputerScore = () => ++computerScore;
-//console.log("Human Score:" + incComputerScore(computerScore))
-
-
-function playRound(humanChoice, computerChoice) {
-
-    console.log("Human Choice:" + " " + humanChoice);
-    console.log("Computer Choice:" + " " + computerChoice);
-
-    if (humanChoice === "Rock" && computerChoice === "Scissors"){
+  
+  function playGame() {
+    // Inkrementfunktionen greifen direkt auf die globalen Variablen zu.
+    let incHumanScore = () => ++humanScore;
+    let incComputerScore = () => ++computerScore;
+  
+    // playRound 
+    function playRound(humanChoice, computerChoice) {
+      console.log("Human Choice: " + humanChoice);
+      console.log("Computer Choice: " + computerChoice);
+  
+      if (humanChoice === "Rock" && computerChoice === "Scissors") {
         incHumanScore();
         return "You won! Rock crushes Scissors.";
-    } else if (humanChoice === "Rock" && computerChoice === "Paper") {
+      } else if (humanChoice === "Rock" && computerChoice === "Paper") {
         incComputerScore();
-        return "You lost! Rocks get wrapped by Papers."
-    } else if (humanChoice === "Rock" && computerChoice === "Rock") {
-        return "Patt, Rock and Rock!" //HumanChoice = Rock
-    } else if (humanChoice === "Paper" && computerChoice === "Rock") {
+        return "You lost! Rocks get wrapped by Papers.";
+      } else if (humanChoice === "Rock" && computerChoice === "Rock") {
+        return "Patt, Rock and Rock!";
+      } else if (humanChoice === "Paper" && computerChoice === "Rock") {
         incHumanScore();
-        return "You won! Papers wrap Rocks." 
-    } else if (humanChoice === "Paper" && computerChoice === "Paper") {
-        return "Patt, Paper and Paper!"
-    } else if (humanChoice === "Paper" && computerChoice === "Scissors") {
+        return "You won! Papers wrap Rocks.";
+      } else if (humanChoice === "Paper" && computerChoice === "Paper") {
+        return "Patt, Paper and Paper!";
+      } else if (humanChoice === "Paper" && computerChoice === "Scissors") {
         incComputerScore();
-        return "You lost! Paper gets cut by Scissors." //HumanChoice = Paper
-    } else if (humanChoice === "Scissors" && computerChoice === "Rock") {
+        return "You lost! Paper gets cut by Scissors.";
+      } else if (humanChoice === "Scissors" && computerChoice === "Rock") {
         incComputerScore();
-        return "You lost! Scissors get crushed by Rocks."
-    } else if (humanChoice === "Scissors" && computerChoice === "Paper") {
+        return "You lost! Scissors get crushed by Rocks.";
+      } else if (humanChoice === "Scissors" && computerChoice === "Paper") {
         incHumanScore();
-        return "You won! Scissorss cut Paper." 
-    } else if (humanChoice === "Scissors" && computerChoice === "Scissors") {
-        return "Patt, Scissors and Scissors." //HumanChoice = Scissors
-    } else {
-        return "invalid input"
-    };
-
-    
+        return "You won! Scissors cut Paper.";
+      } else if (humanChoice === "Scissors" && computerChoice === "Scissors") {
+        return "Patt, Scissors and Scissors.";
+      } else {
+        return "invalid input";
+      }
+    }
+  
+    // Hole die Eingaben und starte die Runde.
+    const humanChoice = getHumanChoice();
+    const computerChoice = getComputerChoice();
+    console.log(playRound(humanChoice, computerChoice));
+  
+    // Ausgabe der aktuellen Scores.
+    console.warn("Human Score: " + humanScore);
+    console.warn("Computer Score: " + computerScore);
   }
-  console.warn("Human Score: " + humanScore)
-    console.warn("Computer Score: " + computerScore)
-  console.log(playRound(getHumanChoice(), getComputerChoice()));
-  }
-
-console.log(playGame())
+  
+  playGame();  
