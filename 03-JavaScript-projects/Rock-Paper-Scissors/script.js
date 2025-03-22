@@ -44,13 +44,13 @@ function getComputerChoice() {
       } else if (humanChoice === "Paper" && computerChoice === "Scissors") {
         incComputerScore();
         return "You lost! Paper gets cut by Scissors.";
-      } else if (humanChoice === "Scissors" || "Scissor" && computerChoice === "Rock") {
+      } else if (humanChoice === "Scissors" && computerChoice === "Rock") {
         incComputerScore();
         return "You lost! Scissors get crushed by Rocks.";
-      } else if (humanChoice === "Scissors" || "Scissor" && computerChoice === "Paper") {
+      } else if (humanChoice === "Scissors" && computerChoice === "Paper") {
         incHumanScore();
         return "You won! Scissors cut Paper.";
-      } else if (humanChoice === "Scissors" || "Scissor" && computerChoice === "Scissors") {
+      } else if (humanChoice === "Scissors" && computerChoice === "Scissors") {
         return "Draw, Scissors and Scissors.";
       } else {
         return "invalid input";
@@ -73,7 +73,6 @@ function getComputerChoice() {
       playGame();    
       round++;             
       setTimeout(gameLoop, 3000); // 3 Sekunden warten, bevor die nächste Runde gestartet wird
-    }
-  }
+    }}
   
   gameLoop();
