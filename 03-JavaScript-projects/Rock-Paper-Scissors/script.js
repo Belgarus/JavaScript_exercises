@@ -14,12 +14,12 @@ function getHumanChoice() {
   let computerScore = 0;
   let x, y = 0
 
-  function playGame() {
+function playGame() {
 
-let incHumanScore = (humanScore) => humanScore++;
+let incHumanScore = () => ++humanScore;
 //console.log("Human Score:" + incHumanScore(humanScore))
 
-let incComputerScore = (computerScore) => computerScore++;
+let incComputerScore = () => ++computerScore;
 //console.log("Human Score:" + incComputerScore(computerScore))
 
 
@@ -29,26 +29,26 @@ function playRound(humanChoice, computerChoice) {
     console.log("Computer Choice:" + " " + computerChoice);
 
     if (humanChoice === "Rock" && computerChoice === "Scissors"){
-        incHumanScore;
+        incHumanScore();
         return "You won! Rock crushes Scissors.";
     } else if (humanChoice === "Rock" && computerChoice === "Paper") {
-        incComputerScore;
+        incComputerScore();
         return "You lost! Rocks get wrapped by Papers."
     } else if (humanChoice === "Rock" && computerChoice === "Rock") {
         return "Patt, Rock and Rock!" //HumanChoice = Rock
     } else if (humanChoice === "Paper" && computerChoice === "Rock") {
-        incHumanScore;
+        incHumanScore();
         return "You won! Papers wrap Rocks." 
     } else if (humanChoice === "Paper" && computerChoice === "Paper") {
         return "Patt, Paper and Paper!"
     } else if (humanChoice === "Paper" && computerChoice === "Scissors") {
-        incComputerScore;
+        incComputerScore();
         return "You lost! Paper gets cut by Scissors." //HumanChoice = Paper
     } else if (humanChoice === "Scissors" && computerChoice === "Rock") {
-        incComputerScore;
+        incComputerScore();
         return "You lost! Scissors get crushed by Rocks."
     } else if (humanChoice === "Scissors" && computerChoice === "Paper") {
-        incHumanScore;
+        incHumanScore();
         return "You won! Scissorss cut Paper." 
     } else if (humanChoice === "Scissors" && computerChoice === "Scissors") {
         return "Patt, Scissors and Scissors." //HumanChoice = Scissors
