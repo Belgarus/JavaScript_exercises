@@ -5,29 +5,25 @@ function getComputerChoice() {
   }
 
 function getHumanChoice() {
-    let HumanInput = prompt("Rock, Paper or Scissor?");
+    let HumanInput = prompt("Rock, Paper or Scissors?");
     let HumanChoice = HumanInput.at(0).toUpperCase() + HumanInput.slice(1).toLowerCase();
     return HumanChoice;
   }
 
-  //console.log("Human Choice:" + " " + getHumanChoice())
+  let humanScore = 0;
+  let computerScore = 0;
 
-  function humanScore(Int) {
-        let hS = 0 + Int
-  }
+  function playGame() {
 
-  function computerScore(Int) {
-        let cS = 0 + Int
-        return cS
-  }
-
+let incHumanScore = (humanScore) => humanScore + 1;
+console.log(incHumanScore(humanScore))
 function playRound(humanChoice, computerChoice) {
 
-    console.log("Human Choice:" + " " + humanChoice)
-    console.log("Computer Choice:" + " " + computerChoice)
+    console.log("Human Choice:" + " " + humanChoice);
+    console.log("Computer Choice:" + " " + computerChoice);
 
     if (humanChoice === "Rock" && computerChoice === "Scissors"){
-        return "You won! Rock crushes Scissors." 
+        return "You won! Rock crushes Scissors."; 
     } else if (humanChoice === "Rock" && computerChoice === "Paper") {
         return "You lost! Rocks get wrapped by Papers."
     } else if (humanChoice === "Rock" && computerChoice === "Rock") {
@@ -49,7 +45,9 @@ function playRound(humanChoice, computerChoice) {
     }
     
   }
+  }
 
+  
   console.log(playRound(getHumanChoice(), getComputerChoice()))
   
 
