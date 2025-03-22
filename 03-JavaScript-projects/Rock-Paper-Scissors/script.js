@@ -13,8 +13,8 @@ function getComputerChoice() {
   
   let humanScore = 0;
   let computerScore = 0;
-  let Round = 0;
-  let RoundCount = () => ++Round
+  let round = 0;
+  let RoundCount = () => ++round
 
   function playGame() {
     RoundCount;
@@ -67,6 +67,13 @@ function getComputerChoice() {
     console.warn("Computer Score: " + computerScore);
   }
   
-  for (Round = 0; RoundCount() < 6;) {
-    playGame();  
+
+  function gameLoop() {
+    if (round < 5) {
+      playGame();    
+      round++;             
+      setTimeout(gameLoop, 3000); // 3 Sekunden warten, bevor die nächste Runde gestartet wird
+    }
   }
+  
+  gameLoop();
