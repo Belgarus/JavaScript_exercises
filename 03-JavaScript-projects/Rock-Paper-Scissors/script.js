@@ -26,14 +26,27 @@ function playRound(humanChoice, computerChoice) {
     console.log("Computer Choice:" + " " + computerChoice)
 
     if (humanChoice === "Rock" && computerChoice === "Scissors"){
-        return "You won! Rock defeats Scissors."
+        return "You won! Rock crushes Scissors." 
     } else if (humanChoice === "Rock" && computerChoice === "Paper") {
-        return "You lost! Rocks get defeated by Papers"
+        return "You lost! Rocks get wrapped by Papers."
     } else if (humanChoice === "Rock" && computerChoice === "Rock") {
-        return "Patt, Rock and Rock!"
+        return "Patt, Rock and Rock!" //HumanChoice = Rock
+    } else if (humanChoice === "Paper" && computerChoice === "Rock") {
+        return "You won! Papers wrap Rocks." 
+    } else if (humanChoice === "Paper" && computerChoice === "Paper") {
+        return "Patt, Paper and Paper!"
+    } else if (humanChoice === "Paper" && computerChoice === "Scissors") {
+        return "You lost! Paper gets cut by Scissors." //HumanChoice = Paper
+    } else if (humanChoice === "Scissors" && computerChoice === "Rock") {
+        return "You lost! Scissors get crushed by Rocks."
+    } else if (humanChoice === "Scissors" && computerChoice === "Paper") {
+        return "You won! Scissorss cut Paper." 
+    } else if (humanChoice === "Scissors" && computerChoice === "Scissors") {
+        return "Patt, Scissors and Scissors." //HumanChoice = Scissors
     } else {
         return "invalid input"
     }
+    
   }
 
   console.log(playRound(getHumanChoice(), getComputerChoice()))
