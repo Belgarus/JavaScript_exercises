@@ -4,9 +4,10 @@ function getComputerChoice() {
     return choices[randomIndex];
   }
 
-  function getHumanChoice() {
-    let HumanChoice = prompt("Rock, Paper or Scissor?")
-    return HumanChoice
+function getHumanChoice() {
+    let HumanInput = prompt("Rock, Paper or Scissor?");
+    let HumanChoice = HumanInput.at(0).toUpperCase() + HumanInput.slice(1).toLowerCase();
+    return HumanChoice;
   }
 
   //console.log("Human Choice:" + " " + getHumanChoice())
