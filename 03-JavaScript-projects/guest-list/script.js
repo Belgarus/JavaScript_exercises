@@ -7,8 +7,11 @@ refused.textContent = 'Refuse: ';
 guest = ""
 
 // loop starts here
-while (people =! "Phil" || "Lola"){
-        guest += people
+for (i = 0; i > people.length; i++)
+if (people !== "Phil" && people !== "Lola"){
+        admitted.textContent += people[i] + '';
+} else {
+    refused.textContent += people[i]
 }
 
 // refused.textContent += ;
