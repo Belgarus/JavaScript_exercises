@@ -1,3 +1,3 @@
-# exercise3
-I will learn JavaScript 🌚
-from the Odin Project: https://www.theodinproject.com/lessons/foundations-variables-and-operators
+# Exercises
+I will learn JavaScript from the Odin Project: <br>
+https://www.theodinproject.com/lessons/foundations-variables-and-operators
