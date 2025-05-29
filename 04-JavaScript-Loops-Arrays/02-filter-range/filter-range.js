@@ -1,11 +1,5 @@
 function filterRange(arr, a, b) {
-    let result = []
-    arr.forEach(element => {
-        if (element >= a && element <= b){
-            result.push(element)
-        }
-    });
-    return result
+    return arr.filter(item => (a <= item && item <= b));
 }
 
 console.log(filterRange(['d', 'g', 'e', 'c'], 'a', 'd')); 
