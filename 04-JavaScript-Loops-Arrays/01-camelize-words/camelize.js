@@ -1,15 +1,8 @@
 function camelize(str) {
-    return str
-        .replace(/[-_]/g, ' ')
-        .split(' ')
-        .map((word, index) => {
-            if (index === 0) {
-                return word.toLowerCase();
-            }
-            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-        })
-        .join('');
+  return str
+    .split('-') //'make-it-camelized' → ['make', 'it', 'camelized']
+    .map((word, index) => index == 0 ? word : word[0].toUpperCase() + word.slice(1)) // ['make', 'it', 'camelized']  → ['make', 'It', 'Camelized'] 
+    .join(''); // ['make', 'It', 'Camelized'] → 'makeItCamelized'
 }
 
-console.log(camelize("hello world")); // "helloWorld"
 console.log(camelize("make-it-camelized")); // "makeItCamelized"
