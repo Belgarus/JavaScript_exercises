@@ -1,9 +1,9 @@
 function copySorted(arr) {
-
+    return arr.toSorted()
 }
 
 let arr = ["HTML", "JavaScript", "CSS"];
 let sorted = copySorted(arr);
 
-alert( sorted ); // CSS, HTML, JavaScript
-alert( arr ); // HTML, JavaScript, CSS (no changes)
+console.log(sorted); // CSS, HTML, JavaScript
+console.log(arr); // HTML, JavaScript, CSS (no changes)
