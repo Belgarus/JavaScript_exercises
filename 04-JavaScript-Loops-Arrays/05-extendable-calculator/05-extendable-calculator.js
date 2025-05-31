@@ -10,14 +10,11 @@ function Calculator() {
     let b = parseFloat(parts[2])
     let op = parts[1]
 
-    let checkOp = this.methods.hasOwnProperty(op);
-    let checkNumber = !isNaN(a) && !isNaN(b);
-
-    if (checkOp &&  checkNumber == true){
+    if (this.methods.hasOwnProperty(op) && !isNaN(a) && !isNaN(b)){
         return this.methods[op](a, b);
-    } else { return "something is not correct"}
-    
-    
+    } else { 
+        return "something is not correct"
+    }
   }
 
   this.addMethod = function(name, func) {
