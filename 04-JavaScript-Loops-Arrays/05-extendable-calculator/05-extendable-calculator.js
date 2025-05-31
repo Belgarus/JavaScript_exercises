@@ -1,6 +1,5 @@
 function calculate(str) {
-    parseFloat(str)
+    return eval(str)
 }
 
-let calc = new Calculator;
-console.log(calc.calculate("3 + 7") ); // 10
+console.log(calculate("3 + 7") ); // 10
