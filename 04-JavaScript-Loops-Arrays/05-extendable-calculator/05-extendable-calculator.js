@@ -13,7 +13,7 @@ function Calculator() {
     if (this.methods.hasOwnProperty(op) && !isNaN(a) && !isNaN(b)){
         return this.methods[op](a, b);
     } else { 
-        return "something is not correct"
+        return "Invalid input";
     }
   }
 
@@ -21,3 +21,6 @@ function Calculator() {
     this.methods[name] = func;
   };
 }
+
+const calc = new Calculator();
+console.log(calc.calculate("3 + 4"));
