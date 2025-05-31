@@ -1,5 +1,14 @@
-function calculate(str) {
-    return eval(str)
-}
+function Calculator() {
+  this.methods = {
+    "+": (a, b) => a + b,
+    "-": (a, b) => a - b
+  };
 
-console.log(calculate("3 + 7") ); // 10
+  this.calculate = function(str) {
+    // hier: parse 'str' und muss this.methods[op] benutzen
+  };
+
+  this.addMethod = function(name, func) {
+    this.methods[name] = func;
+  };
+}
