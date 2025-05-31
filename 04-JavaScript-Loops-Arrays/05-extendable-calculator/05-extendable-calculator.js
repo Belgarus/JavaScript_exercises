@@ -1,5 +1,5 @@
 function calculate(str) {
-
+    parseFloat(str)
 }
 
 let calc = new Calculator;
