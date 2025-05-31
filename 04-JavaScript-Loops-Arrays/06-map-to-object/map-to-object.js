@@ -5,8 +5,11 @@ let mary = { name: "Mary", surname: "Key", id: 3 };
 function fullname(arr){
  return arr.name + " " + arr.surname;
 }
-console.log(fullname(john))
 
 let usersMapped = [
-    {}
+    { fullname: fullname(john), id: john.id },
+    { fullname: fullname(pete), id: pete.id },
+    { fullname: fullname(mary), id: mary.id }
 ]
+
+console.log(usersMapped)
