@@ -6,13 +6,13 @@ function Calculator() {
 
   this.calculate = function(str) {
     let parts = str.split(" ")
-    a = parseFloat(parts[0])
-    b = parseFloat(parts[2])
-    op = parts[1]
+    let a = parseFloat(parts[0])
+    let b = parseFloat(parts[2])
+    let op = parts[1]
 
     return this.methods[op](a, b);
   }
-  
+
   this.addMethod = function(name, func) {
     this.methods[name] = func;
   };
