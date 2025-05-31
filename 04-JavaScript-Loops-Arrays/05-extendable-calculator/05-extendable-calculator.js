@@ -24,3 +24,6 @@ function Calculator() {
 
 const calc = new Calculator();
 console.log(calc.calculate("3 + 4"));
+
+calc.addMethod("*", (a, b) => a * b);
+console.log(calc.calculate("2 * 3")); 
