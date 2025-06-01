@@ -8,13 +8,11 @@ function compare(a, b){
     return a.age -b.age
 } 
 
-function sortByAge(){
-    
-}
+let sortByAge = users.sort(compare);
 
-sortByAge(arr);
+
 
 // now: [john, mary, pete]
-console.log(arr[0].name); // John
-console.log(arr[1].name); // Mary
-console.log(arr[2].name); // Pete
+console.log(users[0].name); // John
+console.log(users[1].name); // Mary
+console.log(users[2].name); // Pete
