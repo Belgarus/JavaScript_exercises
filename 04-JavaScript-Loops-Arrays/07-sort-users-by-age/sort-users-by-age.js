@@ -2,10 +2,14 @@ let john = { name: "John", age: 25 };
 let pete = { name: "Pete", age: 30 };
 let mary = { name: "Mary", age: 28 };
 
-let arr = [ pete, john, mary ];
+let users = [ pete, john, mary ];
 
-function sortByAge(users){
+function compare(a, b){
+    return a.age -b.age
+} 
 
+function sortByAge(){
+    
 }
 
 sortByAge(arr);
