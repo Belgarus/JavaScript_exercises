@@ -4,13 +4,9 @@ let mary = { name: "Mary", age: 28 };
 
 let users = [ pete, john, mary ];
 
-function compare(a, b){
-    return a.age -b.age
-} 
+let compare = (a, b) => a.age -b.age
 
 let sortByAge = users.sort(compare);
-
-
 
 // now: [john, mary, pete]
 console.log(users[0].name); // John
