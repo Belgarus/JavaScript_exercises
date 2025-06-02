@@ -1,9 +1,9 @@
 function unique(arr) {
-  /* your code */
+ return arr.filter((element, index) =>  arr.indexOf(element) === index)
 }
 
 let strings = ["Hare", "Krishna", "Hare", "Krishna",
   "Krishna", "Krishna", "Hare", "Hare", ":-O"
 ];
 
-alert( unique(strings) ); // Hare, Krishna, :-O
+console.log( unique(strings) ); // Hare, Krishna, :-O
