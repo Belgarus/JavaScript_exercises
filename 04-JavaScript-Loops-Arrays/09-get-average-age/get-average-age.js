@@ -1,7 +1,6 @@
 function getAverageAge(users){
-  const userAge = users.map(user => (user.age));
-  return userAge.reduce((acc, currentAge) => {
-    return acc + currentAge;
+  return users.reduce((acc, currentAge) => {
+    return acc + currentAge.age;
   }, 0) / 3
 }
 
