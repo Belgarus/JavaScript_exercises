@@ -1,6 +1,7 @@
 function groupById(arr){
- return arr.reduce((acc, user) => {
-    return acc;
+  return arr.reduce((accumulator, current) => {
+    accumulator[current.id] = current;
+    return accumulator;
   }, {});
 }
 
@@ -11,6 +12,7 @@ let users = [
 ];
 
 let usersById = groupById(users);
+console.log(usersById)
 
 /*
 // after the call we should have:
