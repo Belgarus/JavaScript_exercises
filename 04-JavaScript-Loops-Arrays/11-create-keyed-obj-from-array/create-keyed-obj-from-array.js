@@ -1,5 +1,7 @@
 function groupById(arr){
-
+ return arr.reduce((acc, user) => {
+    return acc;
+  }, {});
 }
 
 let users = [
