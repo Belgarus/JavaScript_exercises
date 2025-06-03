@@ -18,5 +18,8 @@ const people = ['Beck, Glenn', 'Becker, Carl', 'Beckett, Samuel', 'Beddoes, Mick
                         ];
 
 //filter inventors those who were born in the 1500 's with .filter()
-const filterInventors = inventors.filter(inventor => inventor.year >= 1500 && inventor.year < 1600 );
-console.log(filterInventors)
+const fifteens = inventors.filter(inventor => inventor.year >= 1500 && inventor.year < 1600 );
+
+//An Array with the full name of the inventores with .map()
+const  getFullName = inventors.map(inventor => [inventor.first, inventor.last].join(" "))
+console.log(getFullName)
