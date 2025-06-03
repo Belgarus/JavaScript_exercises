@@ -22,4 +22,7 @@ const fifteens = inventors.filter(inventor => inventor.year >= 1500 && inventor.
 
 //An Array with the full name of the inventores with .map()
 const  getFullName = inventors.map(inventor => `${inventor.first} ${inventor.last}`)
-console.log(getFullName)
+
+//Sort the Inventors by birthdate, from oldests to youngest
+const inventorsAge = inventors.sort((a,b) => a.year - b.year);
+console.log(inventorsAge)
