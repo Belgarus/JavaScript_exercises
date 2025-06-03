@@ -17,6 +17,6 @@ const people = ['Beck, Glenn', 'Becker, Carl', 'Beckett, Samuel', 'Beddoes, Mick
                             'Billings, Josh', 'Biondo Frank', 'Birrell, Augustine', 'Black Elk', 'Blair, Robert', 'Blair, Tony', 'Bl william'
                         ];
 
-//filter inventors those who were born after the 1500 's with .filter()
-const filterInventors = inventors.filter(birthday => birthday.year > 1500);
+//filter inventors those who were born in the 1500 's with .filter()
+const filterInventors = inventors.filter(inventor => inventor.year >= 1500 && inventor.year < 1600 );
 console.log(filterInventors)
