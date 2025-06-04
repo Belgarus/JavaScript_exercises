@@ -27,7 +27,7 @@ const  getFullName = inventors.map(inventor => `${inventor.first} ${inventor.las
 const inventorsBirth = inventors.sort((a,b) => a.year - b.year);
 
 // How many years did the inventors live? .reduce()
-const inventorsAge = inventors.reduce((acc, current)=> current.passed - current.year);
+const inventorsAge = inventors.reduce((acc, current)=> acc + (current.passed - current.year), 0);
 console.log(inventorsAge)
 //sort the inventors by years lived 
 
