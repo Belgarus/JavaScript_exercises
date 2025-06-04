@@ -24,5 +24,11 @@ const fifteens = inventors.filter(inventor => inventor.year >= 1500 && inventor.
 const  getFullName = inventors.map(inventor => `${inventor.first} ${inventor.last}`)
 
 //Sort the Inventors by birthdate, from oldests to youngest
-const inventorsAge = inventors.sort((a,b) => a.year - b.year);
+const inventorsBirth = inventors.sort((a,b) => a.year - b.year);
+
+// How many years did the inventors live? .reduce()
+const inventorsAge = inventors.reduce((acc, current)=> current.passed - current.year);
 console.log(inventorsAge)
+//sort the inventors by years lived 
+
+//create a list of boulevads that lived in paris
