@@ -28,7 +28,11 @@ const inventorsBirth = inventors.sort((a,b) => a.year - b.year);
 
 // How many years did the inventors live? .reduce()
 const inventorsAge = inventors.reduce((acc, current)=> acc + (current.passed - current.year), 0);
-console.log(inventorsAge)
 //sort the inventors by years lived 
-
+const oldests = inventors.sort(function(a, b) {
+        const firstGuy = a.passed - a.year;
+        const lastGuy = b.passed - b.year;
+    return firstGuy > lastGuy ? -1 : 1;
+});
+console.table(oldests)
 //create a list of boulevads that lived in paris
