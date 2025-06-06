@@ -40,6 +40,8 @@ console.table(oldests)
 //create a list of boulevads that lived in paris 
 //https://en.wikipedia.org/wiki/Category:Boulevards_in_Paris
 const category = document.querySelector('.mw-category');
-const links = Array.from(document.querySelectorAll('a'));
+const links = Array.from(category.querySelectorAll('a'));
+const de = links
+                    .map(link => link.textContent.trim())
+                    .filter(text => text.length > 0);
 
-const de = links.map(link => link.textContent);
