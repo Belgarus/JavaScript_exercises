@@ -59,9 +59,9 @@ const data = ['car', 'car', 'bike', 'truck', 'walk', 'car', 'truck', 'van', 'bik
 
 const transportation = data.reduce((acc, current) => {
       acc[current] = acc[current]
-      ? (acc[current]+= 1)
-      : (acc[current] = 1)
-  return acc
-},[])
+          ? (acc[current]+= 1)
+          : (acc[current] = 1)
+      return acc
+      },{})
 
 console.log(transportation)
