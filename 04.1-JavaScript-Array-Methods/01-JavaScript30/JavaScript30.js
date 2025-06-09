@@ -47,11 +47,14 @@ const de = links
                     .filter(streetName=> streetName.includes('de'));
 */
 
-// sort the people by last name (a, b, c)
+// sort the people by first name (a, b, c)
 const sorted = people.sort((a, b) => {
   const aLast = a.split(" ")[1].toLowerCase();
   const bLast = b.split(" ")[1].toLowerCase();
   return aLast.localeCompare(bLast);
 });
 
-console.log(sorted);
+//sum up the intances of all the items with .reduce
+const data = ['car', 'car', 'bike', 'truck', 'walk', 'car', 'truck', 'van', 'bike',
+                          'car', 'walk', 'truck']
+
