@@ -35,7 +35,6 @@ const oldests = inventors.sort(function(a, b) {
         const lastGuy = b.passed - b.year;
     return firstGuy > lastGuy ? -1 : 1;
 });
-console.table(oldests)
 
 //create a list of boulevads that lived in paris 
 //https://en.wikipedia.org/wiki/Category:Boulevards_in_Paris
@@ -54,7 +53,15 @@ const sorted = people.sort((a, b) => {
   return aLast.localeCompare(bLast);
 });
 
-//sum up the intances of all the items with .reduce
+//sum up the instances of all the items with .reduce
 const data = ['car', 'car', 'bike', 'truck', 'walk', 'car', 'truck', 'van', 'bike',
                           'car', 'walk', 'truck']
 
+const transportation = data.reduce((acc, current) => {
+      acc[current] = acc[current]
+      ? (acc[current]+= 1)
+      : (acc[current] = 1)
+  return acc
+},[])
+
+console.log(transportation)
