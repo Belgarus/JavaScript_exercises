@@ -11,6 +11,7 @@ describe('My Stack', () => {
             const stack = new Stack();
 
             expect(stack.top).toBe(-1);
+            expect(stack.items).toEqual({});
     });
     
 
