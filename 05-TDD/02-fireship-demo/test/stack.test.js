@@ -1,7 +1,20 @@
-describe('My Stack', () =>{
-    it("is created empty");
+class Stack {
+    constructor(){
+        this.top = -1;
+        this.items = {};
+    }
+}
 
-    it('can push to the top');
+describe('My Stack', () => {
 
-    it('can pop off');
+    it('is created empty', () => {
+            const stack = new Stack();
+
+            expect(stack.top).toBe(-1);
+    });
+    
+
+   // it('can push to the top');
+
+   // it('can pop off');
 })
