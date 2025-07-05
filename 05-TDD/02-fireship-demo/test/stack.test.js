@@ -10,10 +10,11 @@ class Stack {
         this.top += 1;
         this.items[this.top] = value;
     }
-    pop(value){
+    pop(){
+        const value = this.items[this.top];
+        delete this.items[this.top]; 
         this.top -= 1;
-        this.items[this.top + 1] = undefined; // Clear the popped item
-    }
+  }
 }
 
 describe('My Stack', () => {
@@ -36,8 +37,10 @@ describe('My Stack', () => {
    });
 
    it('can pop off', () => {
-        stack.pop('🥑')
+        stack.push('🥑'); 
+        stack.pop();
         expect(stack.top).toBe(-1);
+        expect(stack.items).toEqual({});
         expect(stack.peek).toBeUndefined();
    });
 });
