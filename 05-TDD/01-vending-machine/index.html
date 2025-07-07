@@ -12,48 +12,10 @@
       <h1>Vending Machine <em>Change Calculator</em></h1>
       <h2>Calculate the change (<em>coins</em>) to return to a customer when they buy something.</h2>
     </div>
-
     <div id="qunit"></div>
     <div id="qunit-fixture"></div>
     <!-- Load the QUnit Testing Framework from CDN - this is the important bit ... -->
     <script src="https://code.jquery.com/qunit/qunit-1.18.0.js"></script>
-    <script>
-      // This is what a simple unit test looks like:
-      test('This sample test should always pass!', function(assert) {
-        var result = 1 + 1;
-        assert.equal(result, 2); // just so we know everything loaded ok
-      });
-      // A failing test will be RED:
-      test('This is what a failing test looks like!', function(assert) {
-        var result = [1,2,3].indexOf(1);  // this should be 0
-        assert.equal(result, -1); // we *expect* this to fail
-      });
-      test("test getChange", function(assert){
-        var result = 300 - 200
-        assert.equal(result, 100)
-    });
-     const items = [{"id": 1, "price": 199},
-                      {"id": 2, "price": 129},
-                      {"id": 3, "price": 100}
-       ]
-     function totalPayable(item){
-        
-      }
-      
-      function getChange(totalPayable, cashPaid){
-        const Change = [1000, 500, 200, 100, 50, 20, 10, 5, 2, 1]
-        if(cashPaid < totalPayable){
-            return "Insert more money."
-        } else {
-        const changeMoney = cashPaid - totalPayable
-        for (let i = 0; i < Change.length; i++){
-        change
-        }
-        }
-
-    }
-    console.log(getChange(totalPayable, cashPaid))
-    </script>
     <script src="script.js"></script>
     <script src="javascript.test.js"></script>
   </body>
