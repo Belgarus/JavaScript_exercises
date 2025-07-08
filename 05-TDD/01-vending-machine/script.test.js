@@ -8,3 +8,9 @@ test('getChange(1,1) should equal [] - an empty array', function(assert) {
   var expected = [];
   assert.deepEqual(result, expected);
 }); // use deepEqual for arrays see: https://api.qunitjs.com/deepEqual/
+
+test('getChange(486, 600) should equal [100, 10, 2, 2]', function(assert) {
+  var result = getChange(486, 600);
+  var expected = [100, 10, 2, 2];
+  assert.deepEqual(result, expected);
+})
