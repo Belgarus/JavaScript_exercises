@@ -1,4 +1,5 @@
 var test = require('tape').test;
+var test = require('./functions').test;
 
 const add = (a, b) => a + b;
 
