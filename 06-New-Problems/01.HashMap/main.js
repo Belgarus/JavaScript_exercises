@@ -14,4 +14,13 @@ hash(key) {
 set(key, value){
     const index= this.hash(key);
     this.table[index] = value;
-}};
+};
+remove(key){
+    const index = this.hash(key);
+    delete this.table[index];
+}
+get(key){
+    const index = this.hash(key);
+    return this.table[index];
+}
+};
