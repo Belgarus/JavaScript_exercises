@@ -10,8 +10,16 @@
             if(this.head === null){
                  this.head = new ListNode(val);
             } else {
-                
+                this.insertEnd(val);
             }
+        }
+        insertEnd(val){
+            let newNode = new ListNode(val);
+            let tempNode = this.head;
+            while(tempNode.next){//true until null -> false
+                    tempNode = tempNode.next;
+            }
+            tempNode.next = newNode;
         }
         isEmpty(){
             return this.head === null;
