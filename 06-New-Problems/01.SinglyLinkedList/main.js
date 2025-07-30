@@ -24,7 +24,21 @@
         isEmpty(){
             return this.head === null;
         }
+        print(){
+            let tempNode = this.head;
+            let result = '';
+            while(tempNode){
+                if(tempNode.next === null){
+                    result += tempNode.val + '--> Null'; 
+                }else {
+                    result += tempNode.val + '-->';
+                }
+                tempNode = tempNode.next;
+            }
+            console.log(result);
+        }
  }
 
  const list = new LinkedList();
  list.insert('Scanlan'); //Scanlan is inserted as a new value
+list.print()
