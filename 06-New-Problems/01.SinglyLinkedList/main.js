@@ -26,6 +26,21 @@
             newNode.next = this.head;
             this.head = newNode;
         }
+        insertAtIndex(val, index){
+            let previusNode; 
+            let currentNode = this.head;
+            let indexCounter =  0;
+
+            let newNode = new ListNode(val);
+
+            while(indexCounter < index){
+                previusNode = currentNode;
+                currentNode = previusNode.next;
+                indexCounter++;
+            }
+            previusNode.next = newNode;
+            newNode.next = currentNode;
+        }
         isEmpty(){
             return this.head === null;
         }
@@ -49,5 +64,7 @@
  list.insert('Leonard');
  list.insert('Howard')
  list.insert('Rajesh')
- list.insertHead('Penny')
+ list.insertHead('Amy')
+ list.insertAtIndex('Bernadet', 3)
+  list.insertAtIndex('Penny', 2)
  list.print()
