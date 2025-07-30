@@ -5,5 +5,5 @@
     }
  }
  class LinkedList {
-
+        head = null;
  }
