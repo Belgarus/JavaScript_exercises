@@ -21,6 +21,11 @@
             }
             tempNode.next = newNode;
         }
+        insertHead(val){
+            let newNode = new ListNode(val);
+            newNode.next = this.head;
+            this.head = newNode;
+        }
         isEmpty(){
             return this.head === null;
         }
@@ -44,4 +49,5 @@
  list.insert('Leonard');
  list.insert('Howard')
  list.insert('Rajesh')
+ list.insertHead('Penny')
  list.print()
