@@ -7,3 +7,6 @@
  class LinkedList {
         head = null;
  }
+
+ const list = new LinkedList();
+ list.insert('Scanlan'); //Scanlan is inserted as a new value
