@@ -40,5 +40,8 @@
  }
 
  const list = new LinkedList();
- list.insert('Scanlan'); //Scanlan is inserted as a new value
-list.print()
+ list.insert('Sheldon'); //Sheldon is inserted as a new value
+ list.insert('Leonard');
+ list.insert('Howard')
+ list.insert('Rajesh')
+ list.print()
