@@ -26,9 +26,16 @@ class LinkedList{
         let current = this.head;
         let result = "";
         while(current){
-            result += current.value+"-->";
+            result += current.value+"->";
             current = current.next;
         };
         console.log(result+"null")
     };
 };
+
+let list = new LinkedList();
+list.append("Kirk");
+list.append("Spock");
+list.append("McCoy");
+list.append("Scotty");
+list.printList();
