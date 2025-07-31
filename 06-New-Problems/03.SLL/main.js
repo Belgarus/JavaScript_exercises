@@ -22,4 +22,13 @@ class LinkedList{
         }
         current.next = newNode;
     }
+    printList(){
+        let current = this.head;
+        let result = "";
+        while(current){
+            result += current.value+"-->";
+            current = current.next;
+        };
+        console.log(result+"null")
+    };
 };
