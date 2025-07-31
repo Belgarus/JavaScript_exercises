@@ -46,7 +46,7 @@ class LinkedList{
             prev = current;
             current = current.next;
         }
-        if (current){
+        if (!current){
             console.log("value is not found in list");
             return;
         }
@@ -59,4 +59,5 @@ list.append("Kirk");
 list.append("Spock");
 list.append("McCoy");
 list.append("Scotty");
+list.delete("Scotty");
 list.printList();
