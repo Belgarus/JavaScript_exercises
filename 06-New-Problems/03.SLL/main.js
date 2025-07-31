@@ -31,6 +31,27 @@ class LinkedList{
         };
         console.log(result+"null")
     };
+    delete(value){
+        if(!this.head){
+            console.log("list is empty no element to delete");
+            return;
+        };
+        if(this.head.value === value){
+            this.head = this.head.next;
+            return;
+        };
+        let prev = null;
+        let current = this.head;
+        while(current && current.value !== value){
+            prev = current;
+            current = current.next;
+        }
+        if (current){
+            console.log("value is not found in list");
+            return;
+        }
+        prev.next = current.next;
+    };
 };
 
 let list = new LinkedList();
