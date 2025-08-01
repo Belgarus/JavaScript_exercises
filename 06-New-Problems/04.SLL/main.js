@@ -4,3 +4,7 @@ class Node{
         this.next = null;
     }
 }
+
+function LinkedList(data){
+    
+}

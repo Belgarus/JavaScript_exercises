@@ -1,8 +1,8 @@
-class Node {
-    constructor(value)
+class Node { 
+    constructor(value) //Ist die Funktion, die aufgerufen wird, wenn man new Node(someValue) schreibt.
     {
-        this.value = value;
-        this.next = null;
+        this.value = value; //speichert den übergebenen Wert (z. B. eine Zahl, einen String oder ein Objekt) im neuen Knoten.
+        this.next = null; //Legt den Zeiger auf den nächsten Knoten auf null, weil beim Erstellen eines neuen Einzelknotens noch nicht feststeht, wer „danach“ kommt.
     };
 };
 
