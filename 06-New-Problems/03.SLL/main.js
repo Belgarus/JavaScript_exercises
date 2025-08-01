@@ -47,25 +47,34 @@ class LinkedList{
         // Am Ende steht 'null' als Abschluss
         console.log(result+"null")
     };
-    delete(value){
-        if(!this.head){
+    delete(value){ // Entfernt den ersten Knoten mit dem angegebenen Wert.
+
+        if(!this.head){ //Liste leer?
             console.log("list is empty no element to delete");
             return;
         };
-        if(this.head.value === value){
-            this.head = this.head.next;
+
+        if(this.head.value === value){ // Der Head-Knoten selbst soll gelöscht werden?
+            this.head = this.head.next;  // Überspringe den Head, indem du head auf den nächsten Knoten setzt
             return;
         };
-        let prev = null;
-        let current = this.head;
+
+        // Allgemeiner Fall: suche den Knoten
+        let prev = null;           // Vorgänger-Knoten
+        let current = this.head;   // Start bei head
+
+        // Laufe weiter, bis current null ist oder wir den Wert gefunden haben
         while(current && current.value !== value){
             prev = current;
             current = current.next;
         }
-        if (!current){
+
+        if (!current){ // Wert nicht gefunden?
             console.log("value is not found in list");
             return;
         }
+         // Wert gefunden: überspringe den aktuellen Knoten
+         // prev.next zeigt jetzt auf current.next, current wird so entfernt
         prev.next = current.next;
     };
 };
