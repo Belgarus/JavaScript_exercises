@@ -27,3 +27,8 @@ function Foo(bar) {
 }
 const f = new Foo(123);
 console.log(f.bar); 
+
+let head = new Node(4);
+head.next = new Node(5);
+head.next.next = new Node(6);
+console.log(head.value + head.next.value + head.next.next.value);
