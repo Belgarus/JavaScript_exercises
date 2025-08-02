@@ -10,16 +10,23 @@ class LinkedList{
         this.head = null;
     }
     append(value){
-        let newNode = new Node(value);
-        let current = this.head;
+        const newNode = new Node(value);
         if(this.head === null){
             this.head = newNode;
-            newNode.next = null
             return;
         }
+        let current = this.head;
+        while(current.next !== null){
+            current = current.next;
+        } 
+        current.next = newNode;
+        return;
     }
 }
 
 let list = new LinkedList;
 list.append("1")
+list.append("2")
+list.append("3")
+list.append("4")
 console.log(list)
