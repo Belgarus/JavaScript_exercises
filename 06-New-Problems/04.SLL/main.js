@@ -22,10 +22,18 @@ class LinkedList{
             current.next = newNode;
             return;
         }
-    printList(){
-         if(!this.head){
-            return "The list is empty."
-        } 
+    printList(data){
+         let result = ""
+         if(this.head === null){
+            console.log("The list is empty.");
+            return;
+        }
+        let current = this.head
+        while(current !== null){
+            result += `${current.data} -> `;
+            current = current.next;
+        }
+        return console.log(result + "null");
     }
 }
 
@@ -36,4 +44,4 @@ console.log(head.value, head.next.value, head.next.next.value); */
 let list = new LinkedList();
 list.append("uno")
 list.append("2")
-console.log(list)
+list.printList()
