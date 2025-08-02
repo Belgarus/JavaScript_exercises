@@ -46,7 +46,17 @@ class LinkedList{
             } 
         } prev.next = current.next
     }
-    
+    find(value){
+        let i = 1;
+        let current = this.head;
+        if(this.head == value){
+            return console.log(`${value} exists`)
+        }
+        while(current.value !== value){
+            current = current.next;
+            i++;
+        } return console.log(`The value ${value} exists at index ${i}.`)
+    }
     printList(){
         let result = '';
         let current = this.head;
@@ -68,4 +78,5 @@ list.append("3")
 list.append("4")
 list.prepend("0.5")
 list.delete("3")
+list.find("0.5")
 list.printList()
