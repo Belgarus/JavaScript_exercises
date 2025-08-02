@@ -11,11 +11,15 @@ class LinkedList{
     }
     append(data){
         let newNode = new Node(data);
-        if(this.head = null){
-            this.head = newNode();
+        if(!this.head){
+            this.head = newNode;
             return;
         }
-
+        let current = this.head;
+        while(current.next){
+            current = current.next
+        }
+        current.next = newNode;
     }
     printList(){
 
