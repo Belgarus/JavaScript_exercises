@@ -84,15 +84,27 @@ class LinkedList{
         }
         return console.log(result + 'null');
     }
+    toArray(){
+        let result = [];
+        let current = this.head;
+        if(this.head === null){
+            return console.log(result);
+        }
+        while(current !== null){
+            result.push(`${current.val}`);
+            current = current.next
+        } return console.log(result);
+    }
 }
 
 let list = new LinkedList;
-list.append("1")
-list.append("2")
-list.append("3")
-list.append("4")
-list.prepend("0.5")
-list.delete("3")
-list.find("0.5")
-list.insertAtIndex("123", 3)
-list.printList()
+list.append("1");
+list.append("2");
+list.append("3");
+list.append("4");
+list.prepend("0.5");
+list.delete("3");
+list.find("0.5");
+list.insertAtIndex("123", 3);
+list.printList();
+list.toArray();
