@@ -10,19 +10,22 @@ class LinkedList{
         this.head = null;
     }
     append(data){
-        let newNode = new Node(data);
-        if(!this.head){
-            this.head = newNode;
+            const newNode = new Node(data);
+            if(this.head  === null){
+                this.head = newNode;
+                return;
+            }
+            let current = this.head;
+            while(current.next !== null){
+                current = current.next
+            }
+            current.next = newNode;
             return;
         }
-        let current = this.head;
-        while(current.next){
-            current = current.next
-        }
-        current.next = newNode;
-    }
     printList(){
-
+         if(!this.head){
+            return "The list is empty."
+        } 
     }
 }
 
@@ -32,4 +35,5 @@ head.next.next = new Node(3);
 console.log(head.value, head.next.value, head.next.next.value); */
 let list = new LinkedList();
 list.append("uno")
+list.append("2")
 console.log(list)
