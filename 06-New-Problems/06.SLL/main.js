@@ -9,6 +9,16 @@ class LinkedList{
     constructor(value){
         this.head = null;
     }
+    prepend(value){
+        const newNode = new Node(value)
+        let current = this.head
+        if(this.head === null){
+            this.head = newNode;
+            return;
+        }  
+        this.head = newNode
+        newNode.next = current;
+    }
     append(value){
         const newNode = new Node(value);
         let current = this.head;
@@ -22,6 +32,7 @@ class LinkedList{
         current.next = newNode;
         return;
     }
+    
     printList(){
         let result = '';
         let current = this.head;
@@ -41,4 +52,5 @@ list.append("1")
 list.append("2")
 list.append("3")
 list.append("4")
+list.prepend("0.5")
 list.printList()
