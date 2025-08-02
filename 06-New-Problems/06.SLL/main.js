@@ -32,6 +32,20 @@ class LinkedList{
         current.next = newNode;
         return;
     }
+    delete(value){
+        let prev = null;
+        let current = this.head;
+        if(this.head == null){
+            return console.log('List is empty. No item to delete.')
+        } 
+        while(current.value !== value){
+            prev = current;
+            current = current.next;
+            if (current.next == null){
+                return console.log(`Item ${value} is not found in the list.`)
+            } 
+        } prev.next = current.next
+    }
     
     printList(){
         let result = '';
@@ -53,4 +67,5 @@ list.append("2")
 list.append("3")
 list.append("4")
 list.prepend("0.5")
+list.delete("3")
 list.printList()
