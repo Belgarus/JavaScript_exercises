@@ -1,16 +1,16 @@
 class Node {
-    constructor(value){
-        this.value = value;
+    constructor(val){
+        this.val = val;
         this.next = null;
     }
 }
 
 class LinkedList{
-    constructor(value){
+    constructor(val){
         this.head = null;
     }
-    prepend(value){
-        const newNode = new Node(value)
+    prepend(val){
+        const newNode = new Node(val)
         let current = this.head
         if(this.head === null){
             this.head = newNode;
@@ -19,8 +19,8 @@ class LinkedList{
         this.head = newNode
         newNode.next = current;
     }
-    append(value){
-        const newNode = new Node(value);
+    append(val){
+        const newNode = new Node(val);
         let current = this.head;
         if(this.head === null){
             this.head = newNode;
@@ -32,30 +32,45 @@ class LinkedList{
         current.next = newNode;
         return;
     }
-    delete(value){
+    insertAtIndex(val, i){
+            let prev; 
+            let current = this.head;
+            let indexCounter =  0;
+
+            let newNode = new Node(val);
+
+            while(indexCounter < i){
+                prev = current;
+                current = prev.next;
+                indexCounter++;
+            }
+            prev.next = newNode;
+            newNode.next = current;
+        }
+    delete(val){
         let prev = null;
         let current = this.head;
         if(this.head == null){
             return console.log('List is empty. No item to delete.')
         } 
-        while(current.value !== value){
+        while(current.val !== val){
             prev = current;
             current = current.next;
             if (current.next == null){
-                return console.log(`Item ${value} is not found in the list.`)
+                return console.log(`Item ${val} is not found in the list.`)
             } 
         } prev.next = current.next
     }
-    find(value){
+    find(val){
         let i = 1;
         let current = this.head;
-        if(this.head == value){
-            return console.log(`${value} exists`)
+        if(this.head == val){
+            return console.log(`${val} exists`)
         }
-        while(current.value !== value){
+        while(current.val !== val){
             current = current.next;
             i++;
-        } return console.log(`The value ${value} exists at index ${i}.`)
+        } return console.log(`The value ${val} exists at index ${i}.`)
     }
     printList(){
         let result = '';
@@ -64,7 +79,7 @@ class LinkedList{
             return console.log('List is empty.');
         }
         while(current !== null){
-            result += `${current.value} -> `;
+            result += `${current.val} -> `;
             current = current.next;
         }
         return console.log(result + 'null');
@@ -79,4 +94,5 @@ list.append("4")
 list.prepend("0.5")
 list.delete("3")
 list.find("0.5")
+list.insertAtIndex("123", 3)
 list.printList()
