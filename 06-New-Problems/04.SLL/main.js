@@ -22,6 +22,21 @@ class LinkedList{
             current.next = newNode;
             return;
         }
+    delete(data){
+        let current = this.head;
+        let before = null;
+        if(!this.head){
+            return console.log("List is empty.")
+        }
+        while(current && current.data !== data){
+            before = current;
+            current = current.next;
+            if(current.next === null){
+                return console.log(`Item ${data} not found`)
+            }
+        } before.next = current.next;
+    
+    }
     printList(data){
          let result = ""
          if(this.head === null){
@@ -42,6 +57,10 @@ head.next = new Node(2);
 head.next.next = new Node(3);
 console.log(head.value, head.next.value, head.next.next.value); */
 let list = new LinkedList();
-list.append("uno")
-list.append("2")
-list.printList()
+list.append("uno");
+list.append("2");
+list.append("🌳");
+list.append("Four");
+list.delete("2");
+list.delete("Fou");
+list.printList();
