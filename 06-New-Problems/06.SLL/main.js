@@ -11,16 +11,28 @@ class LinkedList{
     }
     append(value){
         const newNode = new Node(value);
+        let current = this.head;
         if(this.head === null){
             this.head = newNode;
             return;
-        }
-        let current = this.head;
+        }  
         while(current.next !== null){
             current = current.next;
         } 
         current.next = newNode;
         return;
+    }
+    printList(){
+        let result = '';
+        let current = this.head;
+        if(this.head === null){
+            return console.log('List is empty.');
+        }
+        while(current !== null){
+            result += `${current.value} -> `;
+            current = current.next;
+        }
+        return console.log(result + 'null');
     }
 }
 
@@ -29,4 +41,4 @@ list.append("1")
 list.append("2")
 list.append("3")
 list.append("4")
-console.log(list)
+list.printList()
