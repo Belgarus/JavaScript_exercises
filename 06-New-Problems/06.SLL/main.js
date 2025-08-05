@@ -95,6 +95,9 @@ class LinkedList{
             current = current.next
         } return console.log(result);
     }
+    reverseList(){
+        
+    }
 }
 
 let list = new LinkedList;
