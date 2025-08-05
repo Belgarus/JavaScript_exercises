@@ -96,7 +96,15 @@ class LinkedList{
         } return console.log(result);
     }
     reverseList(){
-        
+        let prev = null;
+        let current = this.head;
+        let nxt = this.next;
+        while(current !== null){
+            nxt = current.next;
+            current.next = prev;
+            prev = current;
+            current = nxt;
+        } this.head = prev
     }
 }
 
@@ -111,4 +119,6 @@ list.find("0.5");
 list.insertAtIndex("123", 3);
 list.printList();
 list.toArray();
+console.log("Reversed:")
 list.reverseList();
+list.printList();
