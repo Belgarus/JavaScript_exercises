@@ -95,17 +95,6 @@ class LinkedList{
             current = current.next
         } return console.log(result);
     }
-    reverseList(head){
-    let curr = head;
-    let prev = null;
-    let next;
-    while (curr !== null) {
-        next = curr.next;
-        curr.next = prev;
-        prev = curr;
-        curr = next;
-    } return prev;
-    }
 }
 
 let list = new LinkedList;
