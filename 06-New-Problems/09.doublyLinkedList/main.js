@@ -21,4 +21,14 @@ class DoublyLinkedList {
         if (this.head == null) return true;
         return false;
     }
+    addItem(val){
+        let temp = new Node(val);
+        if (this.head == null){
+            this.head = temp;
+            this.tail = temp
+        } else {
+            this.tail.next = temp;
+            this.tail = this.tail.next;
+        }
+    }
 }
