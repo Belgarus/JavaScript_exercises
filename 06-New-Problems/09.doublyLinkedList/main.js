@@ -31,4 +31,23 @@ class DoublyLinkedList {
             this.tail = this.tail.next;
         }
     }
+    display(){
+        let res = ""
+        if(!this.isEmpty()){ // Check if the List is empty
+            let curr = this.head;
+            while(curr !== null){
+                res += `${curr.data} <-> `
+                curr = curr.next;
+            } console.log(`head <-> ${res}null`)
+        }
+    }
 }
+
+const dll = new DoublyLinkedList();
+
+dll.addItem(25);
+dll.addItem(27);
+dll.addItem(29);
+dll.addItem(17);
+
+dll.display();
