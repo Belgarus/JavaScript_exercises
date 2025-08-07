@@ -103,7 +103,7 @@ class LinkedList{
             nxt = current.next;
             current.next = prev;
             prev = current;
-            current = nxt;
+            current = nxt; 
         } this.head = prev
     }
 }
