@@ -11,3 +11,14 @@ class Node {
         this.prev = null;
     }
 }
+
+class DoublyLinkedList {
+    constructor(){
+        this.head = null;
+        this.tail = null;
+    }
+    isEmpty(){
+        if (this.head == null) return true;
+        return false;
+    }
+}
