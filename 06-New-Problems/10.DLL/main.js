@@ -25,9 +25,16 @@ class DoublyLinkedList{
     printList(){
     let current = this.head;
     let res = ''
-    while(this.head !== null){
+    while(current !== null){
         res += `${current.val} <-> `;
         current = current.next;
-    } console.log(`${res}head`)
+    } console.log(`${res}null`)
 }
 }
+
+list = new DoublyLinkedList()
+list.append('Sheldon Cooper');
+list.append('Jim Parsons');
+list.append('Leonard Hofstadter');
+list.append('Johnny Galecki');
+list.printList()
