@@ -13,7 +13,6 @@ class DoublyLinkedList{
     }
     append(val) {
     let newNode = new Node(val);
-
     if (this.head === null) { 
         this.head = newNode;
         this.tail = newNode;
@@ -22,5 +21,13 @@ class DoublyLinkedList{
         newNode.prev = this.tail;
         this.tail = newNode;
     }
+} 
+    printList(){
+    let current = this.head;
+    let res = ''
+    while(this.head !== null){
+        res += `${current.val} <-> `;
+        current = current.next;
+    } console.log(`${res}head`)
 }
 }
