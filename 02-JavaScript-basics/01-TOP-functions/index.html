@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="Utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>body{background-color: grey; color: brown;}</style>
+	<title></title>
+</head>
+<body> 
+
+	<script alt="JavaScript">
+       let a = 5;
+       let add7 = (a) => a + 7;
+                console.log(add7(a));
+
+       let multiply = (a, b) => a * b;
+                console.log(multiply(add7(a), 12));
+
+       function capitalize(str) {
+        return str.toLowerCase().charAt(0).toUpperCase() + str.toLowerCase().slice(1)
+           }
+                console.log(capitalize("heLLO WoRLd"));
+    
+        function lastLetter(str){
+            return str.slice(-1)
+        }
+            console.log(lastLetter("abcdefg"))
+    </script>
+</body>
+</html>

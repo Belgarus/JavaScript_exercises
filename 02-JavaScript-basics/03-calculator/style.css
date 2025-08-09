@@ -1,0 +1,37 @@
+table, tr {
+    border: solid black 2px;
+    margin: 2px;   
+    background-color: gray;
+                    }
+
+td {border: solid black 2px;
+    background-color: gray;
+    padding: 0;
+}
+    
+
+ input{padding: 30px 45px;
+            }   
+
+table {display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 1;
+        }  
+
+body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgb(171, 167, 167);
+            font-weight: 900;
+}
+
+.top {display: flex;
+    gap: 2px;
+    border: 0;
+    justify-content: center;
+    align-content: stretch;
+}
+
