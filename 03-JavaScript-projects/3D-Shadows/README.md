@@ -1,14 +1,15 @@
-# 3D Kugel mit realistischen Schatten
+# 3D Kugel mit realistischen Schatten - Performance-Optimiert
 
-Eine interaktive 3D-Anwendung, die eine Kugel mit realistischen Schatten und Beleuchtung darstellt.
+Eine hochoptimierte 3D-Anwendung, die eine Kugel mit realistischen Schatten und Beleuchtung darstellt. Diese Version wurde für maximale Performance und Effizienz optimiert.
 
 ## Features
 
-- **3D-Kugel**: Hochauflösende Kugel mit realistischen Materialeigenschaften
-- **Realistische Schatten**: Weiche Schatten mit hoher Qualität
-- **Dynamische Beleuchtung**: Bewegliches Licht simuliert Sonnenbewegung
-- **Interaktive Steuerung**: Maus- und Tastatursteuerung
+- **3D-Kugel**: Optimierte Kugel mit ausgewogenem Verhältnis von Qualität und Performance
+- **Realistische Schatten**: Effiziente Schatten mit adaptiver Qualitätsanpassung
+- **Dynamische Beleuchtung**: Bewegliches Licht mit reduzierter Komplexität
+- **Interaktive Steuerung**: Optimierte Maus- und Scroll-Steuerung mit Throttling
 - **Anpassbare Parameter**: Schatten-Intensität, Licht-Intensität und Kugel-Größe
+- **Performance-Monitoring**: Echtzeit-FPS-Anzeige und adaptive Schatten-Qualität
 
 ## Verwendung
 
@@ -30,23 +31,36 @@ Eine interaktive 3D-Anwendung, die eine Kugel mit realistischen Schatten und Bel
 - **Rotation pausieren/starten**: Stoppt oder startet die automatische Kugel-Rotation
 - **Kamera zurücksetzen**: Setzt die Kamera in die Ausgangsposition
 
+#### Performance-Anzeige
+- **FPS-Monitor**: Zeigt die aktuelle Bildrate in Echtzeit an
+- **Schatten-Status**: Zeigt an, ob Schatten aktiv oder reduziert sind
+- **Adaptive Qualität**: Automatische Anpassung der Schatten-Qualität basierend auf der Performance
+
 ## Technische Details
 
 ### Verwendete Technologien
 - **Three.js**: JavaScript 3D-Bibliothek für WebGL
 - **WebGL**: Hardware-beschleunigte 3D-Grafik
 - **Vanilla JavaScript**: Keine zusätzlichen Frameworks erforderlich
+- **Performance-APIs**: requestAnimationFrame, performance.now() für optimierte Animationen
 
 ### Schatten-Implementierung
-- **PCF Soft Shadow Mapping**: Weiche, realistische Schatten
-- **Mehrere Lichtquellen**: Hauptlicht + Umgebungslicht + weiches Seitenlicht
-- **Schatten-Karten**: 2048x2048 Auflösung für hohe Qualität
-- **Dynamische Beleuchtung**: Bewegliches Licht für realistische Effekte
+- **PCF Shadow Mapping**: Optimierte Schatten mit ausgewogener Qualität
+- **Reduzierte Lichtquellen**: Hauptlicht + Umgebungslicht für bessere Performance
+- **Schatten-Karten**: 1024x1024 Auflösung für optimale Performance
+- **Adaptive Schatten**: Automatische Qualitätsanpassung basierend auf der FPS
+- **Dynamische Beleuchtung**: Bewegliches Licht mit reduzierter Komplexität
 
 ### Performance-Optimierungen
 - **Efficient Rendering**: Nur notwendige Objekte werden gerendert
 - **Adaptive Schatten**: Schatten werden nur bei Bedarf aktualisiert
 - **Responsive Design**: Automatische Anpassung an Fenstergröße
+- **Throttling & Debouncing**: Optimierte Event-Handler für bessere Performance
+- **Reduzierte Geometrie**: Kugel-Auflösung von 64x64 auf 32x32 reduziert
+- **Frustum Culling**: Nur sichtbare Objekte werden gerendert
+- **Frame-Rate-Limiting**: Maximale 60fps für optimale Performance
+- **Memory Management**: Automatische Bereinigung von Geometrien und Materialien
+- **WebGL-Optimierungen**: Deaktiviertes Antialiasing, optimierte Renderer-Einstellungen
 
 ## Browser-Kompatibilität
 
