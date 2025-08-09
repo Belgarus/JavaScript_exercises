@@ -2,6 +2,7 @@
 
 Eine hochoptimierte 3D-Anwendung, die eine Kugel mit realistischen Schatten und Beleuchtung darstellt. Diese Version wurde für maximale Performance und Effizienz optimiert.
 
+<img src="./3D-Modell.png" width="800" alt="3D Kugel mit Schatten - Screenshot der Anwendung">
 ## Features
 
 - **3D-Kugel**: Optimierte Kugel mit ausgewogenem Verhältnis von Qualität und Performance
