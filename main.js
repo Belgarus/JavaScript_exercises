@@ -213,9 +213,9 @@ class BlackHole3DSimulation {
             
             const geometry = new THREE.BufferGeometry().setFromPoints(points);
             const material = new THREE.LineBasicMaterial({
-                color: 0x0066ff,
+                color: 0x00aaff,
                 transparent: true,
-                opacity: 0.3
+                opacity: 0.6
             });
             const line = new THREE.Line(geometry, material);
             this.scene.add(line);
@@ -238,9 +238,9 @@ class BlackHole3DSimulation {
             
             const geometry = new THREE.BufferGeometry().setFromPoints(points);
             const material = new THREE.LineBasicMaterial({
-                color: 0x0066ff,
+                color: 0x00aaff,
                 transparent: true,
-                opacity: 0.3
+                opacity: 0.6
             });
             const line = new THREE.Line(geometry, material);
             this.scene.add(line);
