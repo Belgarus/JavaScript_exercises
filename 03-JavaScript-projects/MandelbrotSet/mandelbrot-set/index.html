@@ -14,121 +14,332 @@
             <p>Click and drag: Pan around</p>
         </div>
         <button id="resetButton">Reset View</button>
+        <div id="fps">FPS: 0</div>
     </div>
     <canvas id="mandelbrotCanvas"></canvas>
+
+    <!-- Vertex Shader -->
+    <script type="x-shader/x-vertex" id="vertexShader">
+        attribute vec2 a_position;
+        void main() {
+            gl_Position = vec4(a_position, 0.0, 1.0);
+        }
+    </script>
+
+    <style>
+        #fps {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-family: monospace;
+            z-index: 1000;
+        }
+    </style>
+
+    <!-- Fragment Shader -->
+    <script type="x-shader/x-fragment" id="fragmentShader">
+        precision highp float;
+        uniform vec2 u_resolution;
+        uniform vec2 u_offset;
+        uniform float u_zoom;
+        uniform float u_maxIterations;
+
+        vec3 hsv2rgb(vec3 c) {
+            vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+            vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+            return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+        }
+
+        void main() {
+            // Korrigiere das Seitenverhältnis
+            float aspectRatio = u_resolution.x / u_resolution.y;
+            vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution) / min(u_resolution.x, u_resolution.y);
+            
+            // Korrigiere die Koordinaten für das richtige Seitenverhältnis
+            uv.x *= aspectRatio;
+            
+            // Berechne die komplexe Zahl c für den aktuellen Pixel
+            vec2 c = uv * 4.0 / u_zoom + u_offset;
+            
+            vec2 z = vec2(0.0);
+            float iterations = 0.0;
+            
+            const float MAX_ITER = 256.0;
+            float maxIter = min(MAX_ITER, u_maxIterations * (1.0 + log(u_zoom) / 10.0));
+            
+            const float bailout = 4.0;
+            bool escaped = false;
+            
+            for(int i = 0; i < 2000; i++) {
+                if (float(i) >= maxIter) break;
+                
+                float x = (z.x * z.x - z.y * z.y) + c.x;
+                float y = (2.0 * z.x * z.y) + c.y;
+                
+                if (x * x + y * y > bailout) {
+                    escaped = true;
+                    iterations = float(i);
+                    // Verbesserte Smooth-Coloring-Formel
+                    float log_zn = log(x * x + y * y) / 2.0;
+                    float nu = log(log_zn / log(2.0)) / log(2.0);
+                    iterations = iterations + 1.0 - nu;
+                    break;
+                }
+                
+                z.x = x;
+                z.y = y;
+            }
+            
+            if (!escaped) {
+                gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+            } else {
+                // Verbesserte Farbberechnung
+                float hue = 0.95 + 10.0 * iterations / maxIter;
+                hue = fract(hue);
+                vec3 color = hsv2rgb(vec3(hue, 0.9, 1.0));
+                gl_FragColor = vec4(color, 1.0);
+            }
+        }
+    </script>
+
     <script>
-        // Wait for the DOM to be fully loaded
         document.addEventListener('DOMContentLoaded', function() {
             const canvas = document.getElementById('mandelbrotCanvas');
-            const ctx = canvas.getContext('2d');
             const resetButton = document.getElementById('resetButton');
+            const fpsDisplay = document.getElementById('fps');
+            
+            // WebGL Setup
+            const gl = canvas.getContext('webgl', { antialias: false });
+            if (!gl) {
+                alert('WebGL nicht verfügbar');
+                return;
+            }
 
+            // Shader Program erstellen
+            function createShader(gl, type, source) {
+                const shader = gl.createShader(type);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+                const success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+                if (!success) {
+                    const error = gl.getShaderInfoLog(shader);
+                    console.error(`Could not compile shader: ${error}`);
+                    gl.deleteShader(shader);
+                    throw new Error(`Shader compilation failed: ${error}`);
+                }
+                return shader;
+            }
+
+            function createProgram(gl, vertexShader, fragmentShader) {
+                const program = gl.createProgram();
+                gl.attachShader(program, vertexShader);
+                gl.attachShader(program, fragmentShader);
+                gl.linkProgram(program);
+                const success = gl.getProgramParameter(program, gl.LINK_STATUS);
+                if (!success) {
+                    const error = gl.getProgramInfoLog(program);
+                    console.error(`Could not link program: ${error}`);
+                    gl.deleteProgram(program);
+                    throw new Error(`Program linking failed: ${error}`);
+                }
+                return program;
+            }
+
+            // Create and compile shaders
+            let vertexShader, fragmentShader, program;
+            try {
+                vertexShader = createShader(gl, gl.VERTEX_SHADER, document.getElementById('vertexShader').textContent);
+                fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, document.getElementById('fragmentShader').textContent);
+                program = createProgram(gl, vertexShader, fragmentShader);
+            } catch (error) {
+                console.error('Shader creation failed:', error);
+                alert('Failed to initialize WebGL shaders. See console for details.');
+                return;
+            }
+
+            if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+                console.error(gl.getProgramInfoLog(program));
+                return;
+            }
+
+            // Attribute und Uniform Locations
+            const positionAttributeLocation = gl.getAttribLocation(program, 'a_position');
+            const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
+            const offsetLocation = gl.getUniformLocation(program, 'u_offset');
+            const zoomLocation = gl.getUniformLocation(program, 'u_zoom');
+            const maxIterationsLocation = gl.getUniformLocation(program, 'u_maxIterations');
+
+            // Vertex Buffer
+            const positionBuffer = gl.createBuffer();
+            const positions = new Float32Array([
+                -1, -1,
+                1, -1,
+                -1, 1,
+                1, 1,
+            ]);
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+
+            // State
             let zoom = 1;
             let offsetX = 0;
             let offsetY = 0;
+            let isDragging = false;
+            let lastX = 0;
+            let lastY = 0;
+            let frameCount = 0;
+            let lastTime = performance.now();
+            let maxIterations = 100;
 
-            function mandelbrot(real, imaginary) {
-                let x = 0;
-                let y = 0;
-                let iteration = 0;
-                const maxIterations = 255;
-
-                while (x * x + y * y < 4 && iteration < maxIterations) {
-                    const xTemp = x * x - y * y + real;
-                    y = 2 * x * y + imaginary;
-                    x = xTemp;
-                    iteration++;
-                }
-
-                return iteration;
-            }
-
-            function getColor(value) {
-                const color = { r: 0, g: 0, b: 0 };
-                if (value === 255) {
-                    return color; // Black for points in the Mandelbrot set
-                }
-                const hue = value % 256;
-                color.r = hue;
-                color.g = (hue * 2) % 256;
-                color.b = (hue * 3) % 256;
-                return color;
-            }
-
-            function drawMandelbrot() {
-                const imageData = ctx.createImageData(canvas.width, canvas.height);
-                const data = imageData.data;
+            function resizeCanvas() {
+                const displayWidth = window.innerWidth;
+                const displayHeight = window.innerHeight;
                 
-                const scale = Math.min(canvas.width, canvas.height) / 4;
-
-                for (let x = 0; x < canvas.width; x++) {
-                    for (let y = 0; y < canvas.height; y++) {
-                        const real = (x - canvas.width / 2) / (scale * zoom) + offsetX;
-                        const imaginary = (y - canvas.height / 2) / (scale * zoom) + offsetY;
-                        const value = mandelbrot(real, imaginary);
-                        const color = getColor(value);
-                        const pixelIndex = (x + y * canvas.width) * 4;
-
-                        data[pixelIndex] = color.r;
-                        data[pixelIndex + 1] = color.g;
-                        data[pixelIndex + 2] = color.b;
-                        data[pixelIndex + 3] = 255; // Alpha
-                    }
-                }
-
-                ctx.putImageData(imageData, 0, 0);
+                canvas.width = displayWidth;
+                canvas.height = displayHeight;
+                
+                gl.viewport(0, 0, canvas.width, canvas.height);
             }
 
-            function initializeCanvas() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                drawMandelbrot();
+            function render() {
+                gl.useProgram(program);
+                
+                // Vertex Attribute setzen
+                gl.enableVertexAttribArray(positionAttributeLocation);
+                gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+                gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+
+                // Uniforms setzen
+                gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+                gl.uniform2f(offsetLocation, offsetX, offsetY);
+                gl.uniform1f(zoomLocation, zoom);
+                gl.uniform1f(maxIterationsLocation, maxIterations);
+
+                // Zeichnen
+                gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+                // FPS berechnen
+                frameCount++;
+                const currentTime = performance.now();
+                if (currentTime - lastTime >= 1000) {
+                    fpsDisplay.textContent = `FPS: ${frameCount}`;
+                    frameCount = 0;
+                    lastTime = currentTime;
+                }
+
+                requestAnimationFrame(render);
             }
 
             function resetView() {
                 zoom = 1;
                 offsetX = 0;
                 offsetY = 0;
-                drawMandelbrot();
+                maxIterations = 100;
+            }
+
+            let targetZoom = 1;
+            let currentZoom = 1;
+            let zoomAnimationFrame = null;
+            
+            function smoothZoom(target, callback) {
+                if (zoomAnimationFrame) {
+                    cancelAnimationFrame(zoomAnimationFrame);
+                }
+                
+                const startZoom = currentZoom;
+                const startTime = performance.now();
+                const duration = 300; // Animation duration in ms
+                
+                function animate(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    // Easing function für sanftere Animation
+                    const easeProgress = 1 - Math.pow(1 - progress, 3);
+                    
+                    currentZoom = startZoom + (target - startZoom) * easeProgress;
+                    
+                    callback(currentZoom);
+                    
+                    if (progress < 1) {
+                        zoomAnimationFrame = requestAnimationFrame(animate);
+                    }
+                }
+                
+                zoomAnimationFrame = requestAnimationFrame(animate);
             }
 
             // Event Listeners
             canvas.addEventListener('wheel', (event) => {
                 event.preventDefault();
-                const zoomFactor = 1.1;
-                const mouseX = event.clientX;
-                const mouseY = event.clientY;
                 
-                // Calculate where the mouse is pointing in the complex plane
-                const pointX = (mouseX - canvas.width / 2) / (canvas.width / 4 * zoom) + offsetX;
-                const pointY = (mouseY - canvas.height / 2) / (canvas.height / 4 * zoom) + offsetY;
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = event.clientX - rect.left;
+                const mouseY = event.clientY - rect.top;
                 
-                if (event.deltaY < 0) {
-                    zoom *= zoomFactor;
-                } else {
-                    zoom /= zoomFactor;
-                }
+                // Berechne den Zielpunkt im komplexen Koordinatensystem
+                const aspectRatio = canvas.width / canvas.height;
+                const zoomPoint = {
+                    x: ((mouseX / canvas.width * 2 - 1) * aspectRatio) * 2 / zoom + offsetX,
+                    y: (mouseY / canvas.height * 2 - 1) * 2 / zoom + offsetY
+                };
                 
-                // Adjust offset to keep the point under the mouse
-                offsetX = pointX - (mouseX - canvas.width / 2) / (canvas.width / 4 * zoom);
-                offsetY = pointY - (mouseY - canvas.height / 2) / (canvas.height / 4 * zoom);
+                // Zoom-Faktor basierend auf Scroll-Geschwindigkeit
+                const zoomFactor = Math.pow(1.001, -event.deltaY);
+                targetZoom = Math.min(Math.max(zoom * zoomFactor, 0.1), 1e13);
                 
-                drawMandelbrot();
+                // Sanfte Zoom-Animation
+                smoothZoom(targetZoom, (newZoom) => {
+                    // Berechne neue Offsets um den Mauszeiger zu fixieren
+                    const scale = newZoom / zoom;
+                    zoom = newZoom;
+                    
+                    offsetX = zoomPoint.x - (((mouseX / canvas.width * 2 - 1) * aspectRatio) * 2 / zoom);
+                    offsetY = zoomPoint.y - ((mouseY / canvas.height * 2 - 1) * 2 / zoom);
+                    
+                    // Passe die Iterationen dynamisch an
+                    maxIterations = Math.min(1000, 100 * Math.log2(zoom + 1));
+                });
+            });
+
+            canvas.addEventListener('mousedown', (event) => {
+                isDragging = true;
+                lastX = event.clientX;
+                lastY = event.clientY;
             });
 
             canvas.addEventListener('mousemove', (event) => {
-                if (event.buttons === 1) { // Left mouse button
-                    offsetX -= event.movementX / (canvas.width / 4 * zoom);
-                    offsetY -= event.movementY / (canvas.height / 4 * zoom);
-                    drawMandelbrot();
+                if (isDragging) {
+                    const dx = event.clientX - lastX;
+                    const dy = event.clientY - lastY;
+                    
+                    offsetX -= dx * 4 / (canvas.width * zoom);
+                    offsetY -= dy * 4 / (canvas.height * zoom);
+                    
+                    lastX = event.clientX;
+                    lastY = event.clientY;
                 }
             });
 
-            resetButton.addEventListener('click', resetView);
-            window.addEventListener('resize', initializeCanvas);
+            canvas.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
 
-            // Initial render
-            initializeCanvas();
+            canvas.addEventListener('mouseleave', () => {
+                isDragging = false;
+            });
+
+            resetButton.addEventListener('click', resetView);
+            window.addEventListener('resize', resizeCanvas);
+
+            // Initialisierung
+            resizeCanvas();
+            render();
         });
     </script>
 </body>
