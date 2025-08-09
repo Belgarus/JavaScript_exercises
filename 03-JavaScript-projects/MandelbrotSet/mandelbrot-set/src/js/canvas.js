@@ -7,6 +7,22 @@ let zoom = 1;
 let offsetX = 0;
 let offsetY = 0;
 
+function mandelbrot(real, imaginary) {
+    let x = 0;
+    let y = 0;
+    let iteration = 0;
+    const maxIterations = 255;
+
+    while (x * x + y * y < 4 && iteration < maxIterations) {
+        const xTemp = x * x - y * y + real;
+        y = 2 * x * y + imaginary;
+        x = xTemp;
+        iteration++;
+    }
+
+    return iteration;
+}
+
 function initializeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -16,11 +32,13 @@ function initializeCanvas() {
 function drawMandelbrot() {
     const imageData = ctx.createImageData(canvas.width, canvas.height);
     const data = imageData.data;
+    
+    const scale = Math.min(canvas.width, canvas.height) / 4;
 
     for (let x = 0; x < canvas.width; x++) {
         for (let y = 0; y < canvas.height; y++) {
-            const real = (x - canvas.width / 2) / (200 * zoom) + offsetX;
-            const imaginary = (y - canvas.height / 2) / (200 * zoom) + offsetY;
+            const real = (x - canvas.width / 2) / (scale * zoom) + offsetX;
+            const imaginary = (y - canvas.height / 2) / (scale * zoom) + offsetY;
             const value = mandelbrot(real, imaginary);
             const color = getColor(value);
             const pixelIndex = (x + y * canvas.width) * 4;
@@ -33,6 +51,13 @@ function drawMandelbrot() {
     }
 
     ctx.putImageData(imageData, 0, 0);
+}
+
+function resetView() {
+    zoom = 1;
+    offsetX = 0;
+    offsetY = 0;
+    drawMandelbrot();
 }
 
 function getColor(value) {
