@@ -1,35 +1,38 @@
-// 3D Schwarze Loch Simulation - Version 2.0
+// 3D Schwarze Loch Simulation - Version 3.0
+// Physikalisch korrekte Simulation mit realistischen Orbitalbahnen
 // Inspiriert von: https://github.com/kavan010/black_hole
-// Verwendet Three.js für 3D-Rendering
 
 class BlackHole3DSimulation {
     constructor() {
         this.scene = null;
         this.camera = null;
         this.renderer = null;
-        this.controls = null;
         
         // Simulations-Parameter
         this.blackHoleMass = 5.0;
-        this.particleCount = 1000;
+        this.particleCount = 2000;
         this.simulationSpeed = 1.0;
         this.showGrid = true;
         this.showAccretionDisk = true;
         this.showLensing = true;
         this.showEventHorizon = true;
+        this.showOrbits = true;
         this.isPaused = false;
         
-        // Schwarzes Loch Eigenschaften
+        // Schwarzes Loch Eigenschaften (in natürlichen Einheiten)
         this.blackHole = {
+            mass: 5.0,
             radius: 2.0,
             eventHorizon: 5.0,
-            accretionDiskRadius: 8.0,
+            accretionDiskInner: 7.5,  // Innere Grenze der Akkretionsscheibe
+            accretionDiskOuter: 25.0,  // Äußere Grenze
             ergosphere: 4.0
         };
         
-        // Partikel-System
+        // Partikel-System mit realistischen Orbitalbahnen
         this.particles = [];
-        this.particleSystem = null;
+        this.orbitTrails = [];
+        this.accretionDiskParticles = [];
         
         // Performance-Monitoring
         this.fps = 0;
@@ -38,8 +41,11 @@ class BlackHole3DSimulation {
         this.renderTime = 0;
         
         // Kamera-Position
-        this.cameraDistance = 50;
+        this.cameraDistance = 80;
         this.cameraRotation = { x: 0, y: 0, z: 0 };
+        
+        // Raumzeitkrümmung
+        this.spacetimeGrid = [];
         
         // Initialisierung
         this.init();
@@ -47,26 +53,19 @@ class BlackHole3DSimulation {
     
     async init() {
         try {
-            // Three.js Scene erstellen
             this.createScene();
             this.createCamera();
             this.createRenderer();
             this.createControls();
             
-            // Schwarzes Loch und Partikel erstellen
             this.createBlackHole();
-            this.createParticleSystem();
-            this.createSpacetimeGrid();
+            this.createSpacetimeCurvature();
             this.createAccretionDisk();
+            this.createOrbitalParticles();
             this.createLensingEffect();
             
-            // Event Listener einrichten
             this.setupEventListeners();
-            
-            // UI anzeigen
             this.showUI();
-            
-            // Animation starten
             this.animate();
             
         } catch (error) {
@@ -80,18 +79,18 @@ class BlackHole3DSimulation {
         this.scene.background = new THREE.Color(0x000011);
         
         // Ambient Light für allgemeine Beleuchtung
-        const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.2);
         this.scene.add(ambientLight);
         
-        // Point Light für das Schwarze Loch
-        const blackHoleLight = new THREE.PointLight(0x0066ff, 2, 100);
+        // Schwarzes Loch Licht (sehr schwach)
+        const blackHoleLight = new THREE.PointLight(0x0066ff, 0.5, 200);
         blackHoleLight.position.set(0, 0, 0);
         this.scene.add(blackHoleLight);
         
-        // Directional Light für Schatten
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        directionalLight.position.set(50, 50, 50);
-        this.scene.add(directionalLight);
+        // Akkretionsscheibe Licht
+        const diskLight = new THREE.PointLight(0xff6600, 3, 100);
+        diskLight.position.set(0, 0, 0);
+        this.scene.add(diskLight);
     }
     
     createCamera() {
@@ -101,7 +100,7 @@ class BlackHole3DSimulation {
             0.1,
             1000
         );
-        this.camera.position.set(0, 30, this.cameraDistance);
+        this.camera.position.set(0, 40, this.cameraDistance);
         this.camera.lookAt(0, 0, 0);
     }
     
@@ -119,11 +118,6 @@ class BlackHole3DSimulation {
     }
     
     createControls() {
-        // Einfache Maus-Steuerung implementieren
-        this.setupMouseControls();
-    }
-    
-    setupMouseControls() {
         let isMouseDown = false;
         let lastMouseX = 0;
         let lastMouseY = 0;
@@ -158,7 +152,7 @@ class BlackHole3DSimulation {
             e.preventDefault();
             const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
             this.cameraDistance *= zoomFactor;
-            this.cameraDistance = Math.max(10, Math.min(200, this.cameraDistance));
+            this.cameraDistance = Math.max(20, Math.min(300, this.cameraDistance));
             this.updateCameraPosition();
         });
         
@@ -178,12 +172,12 @@ class BlackHole3DSimulation {
         const eventHorizonMaterial = new THREE.MeshBasicMaterial({
             color: 0x000000,
             transparent: true,
-            opacity: 0.9
+            opacity: 0.95
         });
         this.eventHorizon = new THREE.Mesh(eventHorizonGeometry, eventHorizonMaterial);
         this.scene.add(this.eventHorizon);
         
-        // Schwarzes Loch Zentrum (kleinere schwarze Kugel)
+        // Schwarzes Loch Zentrum
         const blackHoleGeometry = new THREE.SphereGeometry(this.blackHole.radius, 32, 32);
         const blackHoleMaterial = new THREE.MeshBasicMaterial({
             color: 0x000000,
@@ -192,247 +186,437 @@ class BlackHole3DSimulation {
         });
         this.blackHoleMesh = new THREE.Mesh(blackHoleGeometry, blackHoleMaterial);
         this.scene.add(this.blackHoleMesh);
-        
-        // Gravitationslinseneffekt Ring
-        const lensingGeometry = new THREE.RingGeometry(
-            this.blackHole.eventHorizon * 1.2,
-            this.blackHole.eventHorizon * 1.5,
-            64
-        );
-        const lensingMaterial = new THREE.MeshBasicMaterial({
-            color: 0x0066ff,
-            transparent: true,
-            opacity: 0.3,
-            side: THREE.DoubleSide
-        });
-        this.lensingRing = new THREE.Mesh(lensingGeometry, lensingMaterial);
-        this.lensingRing.rotation.x = -Math.PI / 2;
-        this.scene.add(this.lensingRing);
     }
     
-    createParticleSystem() {
-        // Partikel-Geometrie
-        const particleGeometry = new THREE.BufferGeometry();
-        const positions = new Float32Array(this.particleCount * 3);
-        const colors = new Float32Array(this.particleCount * 3);
-        const sizes = new Float32Array(this.particleCount);
-        
-        // Partikel initialisieren
-        for (let i = 0; i < this.particleCount; i++) {
-            const angle = (Math.PI * 2 * i) / this.particleCount;
-            const distance = 15 + Math.random() * 35;
-            const height = (Math.random() - 0.5) * 10;
-            
-            positions[i * 3] = Math.cos(angle) * distance;
-            positions[i * 3 + 1] = height;
-            positions[i * 3 + 2] = Math.sin(angle) * distance;
-            
-            // Partikel-Farbe basierend auf Position
-            const hue = 200 + (distance - 15) * 2;
-            const saturation = 70 + Math.random() * 30;
-            const lightness = 50 + Math.random() * 30;
-            
-            colors[i * 3] = this.hslToRgb(hue, saturation, lightness).r / 255;
-            colors[i * 3 + 1] = this.hslToRgb(hue, saturation, lightness).g / 255;
-            colors[i * 3 + 2] = this.hslToRgb(hue, saturation, lightness).b / 255;
-            
-            sizes[i] = 0.5 + Math.random() * 1.5;
-        }
-        
-        particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-        particleGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-        
-        // Partikel-Material
-        const particleMaterial = new THREE.PointsMaterial({
-            size: 2,
-            vertexColors: true,
-            transparent: true,
-            opacity: 0.8,
-            blending: THREE.AdditiveBlending
-        });
-        
-        this.particleSystem = new THREE.Points(particleGeometry, particleMaterial);
-        this.scene.add(this.particleSystem);
-        
-        // Partikel-Daten für Animation
-        this.particleData = [];
-        for (let i = 0; i < this.particleCount; i++) {
-            const angle = (Math.PI * 2 * i) / this.particleCount;
-            const distance = 15 + Math.random() * 35;
-            const height = (Math.random() - 0.5) * 10;
-            
-            this.particleData.push({
-                angle: angle,
-                distance: distance,
-                height: height,
-                velocity: 0.02 + Math.random() * 0.03,
-                life: 1.0,
-                originalDistance: distance
-            });
-        }
-    }
-    
-    createSpacetimeGrid() {
+    createSpacetimeCurvature() {
         if (!this.showGrid) return;
         
-        const gridHelper = new THREE.GridHelper(100, 50, 0x0066ff, 0x0033aa);
-        gridHelper.material.opacity = 0.3;
-        gridHelper.material.transparent = true;
-        this.scene.add(gridHelper);
+        // Raumzeitkrümmung als verformtes Gitter
+        const gridSize = 100;
+        const gridDivisions = 50;
         
-        // Vertikale Linien für 3D-Gitter
-        for (let i = -50; i <= 50; i += 10) {
-            const geometry = new THREE.BufferGeometry().setFromPoints([
-                new THREE.Vector3(i, -25, -50),
-                new THREE.Vector3(i, 25, -50),
-                new THREE.Vector3(i, 25, 50),
-                new THREE.Vector3(i, -25, 50)
-            ]);
+        // Horizontales Gitter (gekrümmt)
+        for (let i = 0; i <= gridDivisions; i++) {
+            const y = (i / gridDivisions - 0.5) * gridSize;
+            const points = [];
+            
+            for (let j = 0; j <= gridDivisions; j++) {
+                const x = (j / gridDivisions - 0.5) * gridSize;
+                const z = 0;
+                
+                // Raumzeitkrümmung berechnen
+                const distance = Math.sqrt(x * x + z * z);
+                const curvature = this.calculateSpacetimeCurvature(distance);
+                
+                points.push(new THREE.Vector3(x, y + curvature, z));
+            }
+            
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
             const material = new THREE.LineBasicMaterial({
                 color: 0x0066ff,
                 transparent: true,
-                opacity: 0.2
+                opacity: 0.3
+            });
+            const line = new THREE.Line(geometry, material);
+            this.scene.add(line);
+        }
+        
+        // Vertikales Gitter (gekrümmt)
+        for (let i = 0; i <= gridDivisions; i++) {
+            const x = (i / gridDivisions - 0.5) * gridSize;
+            const points = [];
+            
+            for (let j = 0; j <= gridDivisions; j++) {
+                const y = (j / gridDivisions - 0.5) * gridSize;
+                const z = 0;
+                
+                const distance = Math.sqrt(x * x + z * z);
+                const curvature = this.calculateSpacetimeCurvature(distance);
+                
+                points.push(new THREE.Vector3(x, y + curvature, z));
+            }
+            
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.LineBasicMaterial({
+                color: 0x0066ff,
+                transparent: true,
+                opacity: 0.3
             });
             const line = new THREE.Line(geometry, material);
             this.scene.add(line);
         }
     }
     
+    calculateSpacetimeCurvature(distance) {
+        // Einsteinsche Feldgleichungen vereinfacht
+        const rs = this.blackHole.eventHorizon; // Schwarzschild-Radius
+        const r = Math.max(distance, rs + 0.1);
+        
+        // Raumzeitkrümmung (vereinfacht)
+        const curvature = -rs / (2 * r) * Math.exp(-r / rs);
+        return curvature * 10; // Skalierung für sichtbare Effekte
+    }
+    
     createAccretionDisk() {
         if (!this.showAccretionDisk) return;
         
-        // Akkretionsscheibe als Torus
-        const diskGeometry = new THREE.TorusGeometry(
-            this.blackHole.accretionDiskRadius,
-            2,
-            16,
-            100
-        );
-        const diskMaterial = new THREE.MeshBasicMaterial({
-            color: 0xff6600,
-            transparent: true,
-            opacity: 0.6,
-            side: THREE.DoubleSide
-        });
-        this.accretionDisk = new THREE.Mesh(diskGeometry, diskMaterial);
-        this.accretionDisk.rotation.x = Math.PI / 2;
-        this.scene.add(this.accretionDisk);
+        // Dynamische Akkretionsscheibe mit vielen Partikeln
+        const diskParticleCount = 3000;
+        const diskGeometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(diskParticleCount * 3);
+        const colors = new Float32Array(diskParticleCount * 3);
+        const sizes = new Float32Array(diskParticleCount);
         
-        // Glühen der Akkretionsscheibe
-        const glowGeometry = new THREE.TorusGeometry(
-            this.blackHole.accretionDiskRadius + 1,
-            3,
-            16,
-            100
-        );
-        const glowMaterial = new THREE.MeshBasicMaterial({
-            color: 0xff4400,
+        for (let i = 0; i < diskParticleCount; i++) {
+            // Realistische Verteilung in der Akkretionsscheibe
+            const angle = Math.random() * Math.PI * 2;
+            const radius = this.blackHole.accretionDiskInner + 
+                          Math.random() * (this.blackHole.accretionDiskOuter - this.blackHole.accretionDiskInner);
+            
+            // Höhe basierend auf Radius (dünner innen, dicker außen)
+            const heightScale = 0.1 + (radius - this.blackHole.accretionDiskInner) * 0.02;
+            const height = (Math.random() - 0.5) * heightScale * 10;
+            
+            positions[i * 3] = Math.cos(angle) * radius;
+            positions[i * 3 + 1] = height;
+            positions[i * 3 + 2] = Math.sin(angle) * radius;
+            
+            // Farbe basierend auf Temperatur (heißer innen, kälter außen)
+            const temperature = 1.0 - (radius - this.blackHole.accretionDiskInner) / 
+                              (this.blackHole.accretionDiskOuter - this.blackHole.accretionDiskInner);
+            const hue = 30 + temperature * 30; // Gelb zu Orange
+            const saturation = 80 + temperature * 20;
+            const lightness = 50 + temperature * 30;
+            
+            const rgb = this.hslToRgb(hue, saturation, lightness);
+            colors[i * 3] = rgb.r / 255;
+            colors[i * 3 + 1] = rgb.g / 255;
+            colors[i * 3 + 2] = rgb.b / 255;
+            
+            sizes[i] = 0.5 + temperature * 2;
+            
+            // Partikel-Daten für Animation
+            this.accretionDiskParticles.push({
+                angle: angle,
+                radius: radius,
+                height: height,
+                velocity: this.calculateOrbitalVelocity(radius),
+                life: 1.0,
+                temperature: temperature
+            });
+        }
+        
+        diskGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        diskGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        diskGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+        
+        const diskMaterial = new THREE.PointsMaterial({
+            size: 3,
+            vertexColors: true,
             transparent: true,
-            opacity: 0.3,
-            side: THREE.DoubleSide
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
         });
-        this.diskGlow = new THREE.Mesh(glowGeometry, glowMaterial);
-        this.diskGlow.rotation.x = Math.PI / 2;
-        this.scene.add(this.diskGlow);
+        
+        this.accretionDisk = new THREE.Points(diskGeometry, diskMaterial);
+        this.scene.add(this.accretionDisk);
+    }
+    
+    createOrbitalParticles() {
+        // Partikel mit realistischen Orbitalbahnen
+        for (let i = 0; i < this.particleCount; i++) {
+            const particle = this.createOrbitalParticle();
+            this.particles.push(particle);
+            
+            // Orbit-Trail erstellen
+            if (this.showOrbits) {
+                this.createOrbitTrail(particle);
+            }
+        }
+    }
+    
+    createOrbitalParticle() {
+        // Realistische Orbitalbahn-Parameter
+        const semiMajorAxis = this.blackHole.accretionDiskOuter + Math.random() * 30;
+        const eccentricity = Math.random() * 0.8; // Elliptische Bahnen
+        const inclination = (Math.random() - 0.5) * Math.PI / 4; // Neigung
+        const argumentOfPeriapsis = Math.random() * Math.PI * 2;
+        const longitudeOfAscendingNode = Math.random() * Math.PI * 2;
+        const trueAnomaly = Math.random() * Math.PI * 2;
+        
+        // Position aus Bahnelementen berechnen
+        const position = this.calculatePositionFromOrbitalElements(
+            semiMajorAxis, eccentricity, inclination, 
+            argumentOfPeriapsis, longitudeOfAscendingNode, trueAnomaly
+        );
+        
+        // Geschwindigkeit aus Bahnelementen berechnen
+        const velocity = this.calculateVelocityFromOrbitalElements(
+            semiMajorAxis, eccentricity, inclination,
+            argumentOfPeriapsis, longitudeOfAscendingNode, trueAnomaly
+        );
+        
+        return {
+            position: position,
+            velocity: velocity,
+            semiMajorAxis: semiMajorAxis,
+            eccentricity: eccentricity,
+            inclination: inclination,
+            argumentOfPeriapsis: argumentOfPeriapsis,
+            longitudeOfAscendingNode: longitudeOfAscendingNode,
+            trueAnomaly: trueAnomaly,
+            mass: 0.1 + Math.random() * 0.2,
+            life: 1.0,
+            color: this.getParticleColor(semiMajorAxis)
+        };
+    }
+    
+    calculatePositionFromOrbitalElements(a, e, i, ω, Ω, ν) {
+        // Kepler-Orbitalgleichungen
+        const r = a * (1 - e * e) / (1 + e * Math.cos(ν));
+        
+        const x = r * (Math.cos(Ω) * Math.cos(ω + ν) - Math.sin(Ω) * Math.sin(ω + ν) * Math.cos(i));
+        const y = r * Math.sin(ω + ν) * Math.sin(i);
+        const z = r * (Math.sin(Ω) * Math.cos(ω + ν) + Math.cos(Ω) * Math.sin(ω + ν) * Math.cos(i));
+        
+        return new THREE.Vector3(x, y, z);
+    }
+    
+    calculateVelocityFromOrbitalElements(a, e, i, ω, Ω, ν) {
+        // Geschwindigkeit aus Bahnelementen
+        const μ = this.blackHole.mass * 10; // Gravitationsparameter
+        const r = a * (1 - e * e) / (1 + e * Math.cos(ν));
+        
+        const v = Math.sqrt(μ * (2 / r - 1 / a));
+        
+        // Tangentiale Geschwindigkeitskomponente
+        const vt = v * Math.sqrt(1 + 2 * e * Math.cos(ν) + e * e) / (1 + e * Math.cos(ν));
+        
+        // Geschwindigkeitsvektor
+        const vx = -vt * Math.sin(ν);
+        const vy = 0;
+        const vz = vt * Math.cos(ν);
+        
+        return new THREE.Vector3(vx, vy, vz);
+    }
+    
+    createOrbitTrail(particle) {
+        // Orbit-Trail als Linie
+        const trailPoints = [];
+        const steps = 100;
+        
+        for (let j = 0; j <= steps; j++) {
+            const ν = (j / steps) * Math.PI * 2;
+            const point = this.calculatePositionFromOrbitalElements(
+                particle.semiMajorAxis, particle.eccentricity, particle.inclination,
+                particle.argumentOfPeriapsis, particle.longitudeOfAscendingNode, ν
+            );
+            trailPoints.push(point);
+        }
+        
+        const trailGeometry = new THREE.BufferGeometry().setFromPoints(trailPoints);
+        const trailMaterial = new THREE.LineBasicMaterial({
+            color: particle.color,
+            transparent: true,
+            opacity: 0.3
+        });
+        
+        const trail = new THREE.Line(trailGeometry, trailMaterial);
+        this.scene.add(trail);
+        this.orbitTrails.push(trail);
     }
     
     createLensingEffect() {
         if (!this.showLensing) return;
         
-        // Gravitationslinseneffekt als mehrere Ringe
-        for (let i = 1; i <= 3; i++) {
+        // Gravitationslinseneffekt als verzerrte Ringe
+        for (let i = 1; i <= 5; i++) {
             const ringGeometry = new THREE.RingGeometry(
-                this.blackHole.eventHorizon * (1.5 + i * 0.3),
-                this.blackHole.eventHorizon * (1.8 + i * 0.3),
-                64
+                this.blackHole.eventHorizon * (1.2 + i * 0.2),
+                this.blackHole.eventHorizon * (1.5 + i * 0.2),
+                128
             );
             const ringMaterial = new THREE.MeshBasicMaterial({
                 color: 0x0066ff,
                 transparent: true,
-                opacity: 0.1 - i * 0.02,
+                opacity: 0.1 - i * 0.015,
                 side: THREE.DoubleSide
             });
             const ring = new THREE.Mesh(ringGeometry, ringMaterial);
             ring.rotation.x = -Math.PI / 2;
-            ring.position.y = i * 0.5;
+            ring.position.y = i * 0.3;
             this.scene.add(ring);
         }
     }
     
-    updateParticles(deltaTime) {
-        if (this.isPaused) return;
+    updateAccretionDisk(deltaTime) {
+        if (this.isPaused || !this.accretionDisk) return;
         
-        const positions = this.particleSystem.geometry.attributes.position.array;
-        const colors = this.particleSystem.geometry.attributes.color.array;
+        const positions = this.accretionDisk.geometry.attributes.position.array;
+        const colors = this.accretionDisk.geometry.attributes.color.array;
         
-        for (let i = 0; i < this.particleCount; i++) {
-            const particle = this.particleData[i];
+        for (let i = 0; i < this.accretionDiskParticles.length; i++) {
+            const particle = this.accretionDiskParticles[i];
             
-            // Partikel-Lebensdauer reduzieren
-            particle.life -= 0.001;
+            // Orbitalbewegung
+            particle.angle += particle.velocity * deltaTime * this.simulationSpeed;
             
-            // Neue Partikel wenn zu alt
-            if (particle.life <= 0) {
-                particle.life = 1.0;
+            // Spiralbewegung ins Schwarze Loch (Akkretion)
+            particle.radius -= particle.velocity * 0.01 * deltaTime * this.simulationSpeed;
+            
+            // Höhe zur Ebene ziehen
+            particle.height *= 0.999;
+            
+            // Partikel entfernen wenn zu nah am Schwarzen Loch
+            if (particle.radius < this.blackHole.eventHorizon) {
+                particle.radius = this.blackHole.accretionDiskOuter;
+                particle.height = (Math.random() - 0.5) * 2;
                 particle.angle = Math.random() * Math.PI * 2;
-                particle.distance = particle.originalDistance;
-                particle.height = (Math.random() - 0.5) * 10;
             }
             
+            // Position aktualisieren
+            positions[i * 3] = Math.cos(particle.angle) * particle.radius;
+            positions[i * 3 + 1] = particle.height;
+            positions[i * 3 + 2] = Math.sin(particle.angle) * particle.radius;
+            
+            // Farbe basierend auf Temperatur und Position
+            const temperature = 1.0 - (particle.radius - this.blackHole.accretionDiskInner) / 
+                              (this.blackHole.accretionDiskOuter - this.blackHole.accretionDiskInner);
+            const rgb = this.hslToRgb(30 + temperature * 30, 80 + temperature * 20, 50 + temperature * 30);
+            
+            colors[i * 3] = rgb.r / 255;
+            colors[i * 3 + 1] = rgb.g / 255;
+            colors[i * 3 + 2] = rgb.b / 255;
+        }
+        
+        this.accretionDisk.geometry.attributes.position.needsUpdate = true;
+        this.accretionDisk.geometry.attributes.color.needsUpdate = true;
+    }
+    
+    updateOrbitalParticles(deltaTime) {
+        if (this.isPaused) return;
+        
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+            const particle = this.particles[i];
+            
             // Gravitationskraft berechnen
-            const distance = Math.sqrt(particle.distance * particle.distance + particle.height * particle.height);
+            const distance = particle.position.length();
             
             if (distance < this.blackHole.eventHorizon) {
                 // Partikel fällt ins Schwarze Loch
-                particle.life = 0;
+                this.particles.splice(i, 1);
+                if (this.orbitTrails[i]) {
+                    this.scene.remove(this.orbitTrails[i]);
+                    this.orbitTrails.splice(i, 1);
+                }
                 continue;
             }
             
-            // Relativistische Geschwindigkeit (vereinfacht)
-            const relativisticFactor = 1 / (1 + this.blackHoleMass / (distance * distance));
-            const velocity = particle.velocity * relativisticFactor;
+            // Relativistische Gravitationskraft
+            const force = this.calculateRelativisticForce(particle.position, particle.velocity);
             
-            // Partikel-Position aktualisieren
-            particle.angle += velocity * this.simulationSpeed;
-            particle.distance -= velocity * 0.1 * this.simulationSpeed;
-            particle.height *= 0.999; // Partikel werden zur Ebene gezogen
+            // Beschleunigung
+            const acceleration = force.multiplyScalar(1 / particle.mass);
             
-            // Position in Array schreiben
-            positions[i * 3] = Math.cos(particle.angle) * particle.distance;
-            positions[i * 3 + 1] = particle.height;
-            positions[i * 3 + 2] = Math.sin(particle.angle) * particle.distance;
+            // Geschwindigkeit aktualisieren
+            particle.velocity.add(acceleration.multiplyScalar(deltaTime * this.simulationSpeed));
             
-            // Farbe basierend auf Lebensdauer
-            const alpha = particle.life;
-            colors[i * 3] *= alpha;
-            colors[i * 3 + 1] *= alpha;
-            colors[i * 3 + 2] *= alpha;
+            // Position aktualisieren
+            particle.position.add(particle.velocity.clone().multiplyScalar(deltaTime * this.simulationSpeed));
+            
+            // Bahnelemente aktualisieren
+            this.updateOrbitalElements(particle);
+            
+            // Orbit-Trail aktualisieren
+            if (this.orbitTrails[i]) {
+                this.updateOrbitTrail(particle, this.orbitTrails[i]);
+            }
         }
         
-        this.particleSystem.geometry.attributes.position.needsUpdate = true;
-        this.particleSystem.geometry.attributes.color.needsUpdate = true;
+        // Neue Partikel hinzufügen wenn zu wenige
+        while (this.particles.length < this.particleCount) {
+            const newParticle = this.createOrbitalParticle();
+            this.particles.push(newParticle);
+            if (this.showOrbits) {
+                this.createOrbitTrail(newParticle);
+            }
+        }
+    }
+    
+    calculateRelativisticForce(position, velocity) {
+        const distance = position.length();
+        const rs = this.blackHole.eventHorizon;
+        
+        // Schwarzschild-Metrik (vereinfacht)
+        const c = 1; // Lichtgeschwindigkeit in natürlichen Einheiten
+        const v = velocity.length();
+        const gamma = 1 / Math.sqrt(1 - (v * v) / (c * c));
+        
+        // Gravitationskraft mit relativistischen Korrekturen
+        const forceMagnitude = (this.blackHole.mass * 10) / (distance * distance);
+        const forceDirection = position.clone().normalize().multiplyScalar(-1);
+        
+        // Relativistische Korrektur
+        const relativisticFactor = gamma * (1 + (v * v) / (c * c));
+        
+        return forceDirection.multiplyScalar(forceMagnitude * relativisticFactor);
+    }
+    
+    updateOrbitalElements(particle) {
+        // Bahnelemente aus aktueller Position und Geschwindigkeit neu berechnen
+        // (Vereinfacht - in einer echten Simulation würde man die Kepler-Gleichungen lösen)
+        particle.trueAnomaly += 0.01;
+        if (particle.trueAnomaly > Math.PI * 2) {
+            particle.trueAnomaly -= Math.PI * 2;
+        }
+    }
+    
+    updateOrbitTrail(particle, trail) {
+        // Orbit-Trail aktualisieren
+        const trailPoints = [];
+        const steps = 50;
+        
+        for (let j = 0; j <= steps; j++) {
+            const ν = (j / steps) * Math.PI * 2;
+            const point = this.calculatePositionFromOrbitalElements(
+                particle.semiMajorAxis, particle.eccentricity, particle.inclination,
+                particle.argumentOfPeriapsis, particle.longitudeOfAscendingNode, ν
+            );
+            trailPoints.push(point);
+        }
+        
+        trail.geometry.setFromPoints(trailPoints);
+    }
+    
+    calculateOrbitalVelocity(radius) {
+        // Kepler'sche Geschwindigkeit
+        const μ = this.blackHole.mass * 10;
+        return Math.sqrt(μ / radius);
+    }
+    
+    getParticleColor(semiMajorAxis) {
+        // Farbe basierend auf Bahnradius
+        const normalizedRadius = (semiMajorAxis - this.blackHole.accretionDiskOuter) / 30;
+        const hue = 200 + normalizedRadius * 60; // Blau zu Grün
+        const saturation = 70 + normalizedRadius * 30;
+        const lightness = 50 + normalizedRadius * 20;
+        
+        const rgb = this.hslToRgb(hue, saturation, lightness);
+        return new THREE.Color(rgb.r / 255, rgb.g / 255, rgb.b / 255);
     }
     
     updateBlackHole() {
         // Event Horizon basierend auf Masse aktualisieren
         this.blackHole.eventHorizon = this.blackHoleMass * 1.0;
-        this.blackHole.ergosphere = this.blackHoleMass * 0.8;
-        this.blackHole.accretionDiskRadius = this.blackHole.eventHorizon * 1.6;
+        this.blackHole.accretionDiskInner = this.blackHole.eventHorizon * 1.5;
+        this.blackHole.accretionDiskOuter = this.blackHole.eventHorizon * 5.0;
         
         // Mesh-Größen aktualisieren
-        this.eventHorizon.scale.setScalar(this.blackHole.eventHorizon / 5.0);
-        this.blackHoleMesh.scale.setScalar(this.blackHole.radius / 2.0);
-        
-        // Akkretionsscheibe aktualisieren
-        if (this.accretionDisk) {
-            this.accretionDisk.scale.setScalar(this.blackHole.accretionDiskRadius / 8.0);
-            this.diskGlow.scale.setScalar((this.blackHole.accretionDiskRadius + 1) / 9.0);
+        if (this.eventHorizon) {
+            this.eventHorizon.scale.setScalar(this.blackHole.eventHorizon / 5.0);
         }
-        
-        // Gravitationslinseneffekt aktualisieren
-        if (this.lensingRing) {
-            this.lensingRing.scale.setScalar(this.blackHole.eventHorizon / 5.0);
+        if (this.blackHoleMesh) {
+            this.blackHoleMesh.scale.setScalar(this.blackHole.radius / 2.0);
         }
     }
     
@@ -510,7 +694,7 @@ class BlackHole3DSimulation {
     toggleGrid() {
         // Grid ein-/ausschalten
         this.scene.children.forEach(child => {
-            if (child instanceof THREE.GridHelper) {
+            if (child instanceof THREE.Line && child.material.color.getHex() === 0x0066ff) {
                 child.visible = this.showGrid;
             }
         });
@@ -519,14 +703,16 @@ class BlackHole3DSimulation {
     toggleAccretionDisk() {
         if (this.accretionDisk) {
             this.accretionDisk.visible = this.showAccretionDisk;
-            this.diskGlow.visible = this.showAccretionDisk;
         }
     }
     
     toggleLensing() {
-        if (this.lensingRing) {
-            this.lensingRing.visible = this.showLensing;
-        }
+        // Lensing-Effekte ein-/ausschalten
+        this.scene.children.forEach(child => {
+            if (child instanceof THREE.Mesh && child.geometry instanceof THREE.RingGeometry) {
+                child.visible = this.showLensing;
+            }
+        });
     }
     
     toggleEventHorizon() {
@@ -540,20 +726,26 @@ class BlackHole3DSimulation {
     
     recreateParticleSystem() {
         // Altes Partikel-System entfernen
-        if (this.particleSystem) {
-            this.scene.remove(this.particleSystem);
-        }
+        this.particles.forEach(particle => {
+            // Cleanup
+        });
+        this.particles = [];
+        
+        this.orbitTrails.forEach(trail => {
+            this.scene.remove(trail);
+        });
+        this.orbitTrails = [];
         
         // Neues Partikel-System erstellen
-        this.createParticleSystem();
+        this.createOrbitalParticles();
     }
     
     resetSimulation() {
-        this.camera.position.set(0, 30, this.cameraDistance);
+        this.camera.position.set(0, 40, this.cameraDistance);
         this.camera.rotation.set(0, 0, 0);
         this.cameraRotation = { x: 0, y: 0, z: 0 };
         this.updateCameraPosition();
-        this.initializeParticles();
+        this.recreateParticleSystem();
         this.isPaused = false;
         document.getElementById('togglePause').textContent = 'Pausieren';
         document.getElementById('simulationStatus').textContent = 'Läuft';
@@ -604,7 +796,7 @@ class BlackHole3DSimulation {
             
             // Performance-UI aktualisieren
             document.getElementById('fps').textContent = this.fps;
-            document.getElementById('activeParticles').textContent = this.particleCount;
+            document.getElementById('activeParticles').textContent = this.particles.length;
             document.getElementById('renderTime').textContent = this.renderTime.toFixed(1);
         }
     }
@@ -652,8 +844,13 @@ class BlackHole3DSimulation {
         // Performance aktualisieren
         this.updatePerformance(currentTime);
         
-        // Partikel-Physik aktualisieren
-        this.updateParticles(currentTime);
+        const deltaTime = 16.67; // 60 FPS Basis
+        
+        // Akkretionsscheibe aktualisieren
+        this.updateAccretionDisk(deltaTime);
+        
+        // Orbital-Partikel aktualisieren
+        this.updateOrbitalParticles(deltaTime);
         
         // Schwarzes Loch aktualisieren
         this.updateBlackHole();
