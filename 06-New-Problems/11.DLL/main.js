@@ -6,7 +6,7 @@ class Node {
     }
 }
 
-class doublyLinkedList{
+class DoublyLinkedList{
     constructor(){
         this.head = null;
         this.tail = null;
@@ -25,14 +25,14 @@ class doublyLinkedList{
     }
     insertAtEnd(data){
         const newNode = new Node(data);
-        if(this.tail){
+        if(!this.tail){
             this.head = newNode;
             this.tail = newNode;
         } else {
             newNode.prev = this.tail;
             this.tail.next = newNode;
             this.tail = newNode;
-        } this.length++;
+        } 
     }
 
 }
