@@ -81,4 +81,18 @@ class DoublyLinkedList{
             current = current.next;
         } return false; 
     }
+    printList(data){
+        let current = this.head;
+        let res = '';
+        while (current){
+            res += `${current.data} <-> `;
+            current = current.next;
+        } console.log(`head -> ${res}tail`);
+    }
 }
+ 
+list = new DoublyLinkedList();
+list.insertAtBeginning(1);
+list.insertAtBeginning(0);
+list.insertAtEnd(3);
+list.printList();
