@@ -42,6 +42,10 @@ class DoublyLinkedList{
             this.insertAtBeginning(data);
             return true;
         }
+        if(position === this.length){
+            this.insertAtEnd(data);
+            return true;
+        }
         const newNode = new Node(data);
         let current = this.head;
         for (let i = 0; i < position - 1; i++){
