@@ -58,4 +58,27 @@ class DoublyLinkedList{
         this.length++;
         return true;
     }
+    deleteNode(data){
+        if(!this.head) return false;
+        let current = this.head;
+        while(current){
+            if(current.data === data){
+                if (current === this.head && current === this.tail){
+                    this.head = null;
+                    this.tail = null;
+                } else if(current === this.head){
+                    this.head  = current.next;
+                    this.head.prev = null;
+                } else if (current === this.tail){
+                    this.tail = current.prev;
+                    this.tail.next = null;
+                } else {
+                    current.prev.next = current.next;
+                    current.next.prev = current.prev;
+                } this.length--; 
+                return true;
+            }
+            current = current.next;
+        } return false; 
+    }
 }
