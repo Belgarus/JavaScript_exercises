@@ -19,4 +19,16 @@ class DoublyLinkedList{
             this.tail = newNode;
         }
     }
+    print(value){
+        let current = this.head;
+        let res = 'head -> ';
+        while(current){
+            res += `${current.value} <->`;
+            current = current.next;
+        } console.log(`${res} null`)
+    }
 }
+
+let list = new DoublyLinkedList();
+list.append(1);
+list.print();
