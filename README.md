@@ -1,1 +1,1 @@
-# My exiting JavaScript playground
+# My JavaScript playground
