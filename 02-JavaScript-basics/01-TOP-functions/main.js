@@ -1,11 +1,5 @@
-let sum = (a, b) => a + b;
-
 const arr = [12, 213, 21, 2, 189, 23, 190];
-
-let arrFnc = arr.reduce((a, b) => a + b, 0);
-console.log(arrFnc);
-
-let newArr = arr.sort((a, b) => a - b)
-let len = newArr.length
+let newArr = arr.sort((a, b) => a - b);
+let len = newArr.length;
 
 console.log(newArr[len - 1] + newArr[len - 2]);
