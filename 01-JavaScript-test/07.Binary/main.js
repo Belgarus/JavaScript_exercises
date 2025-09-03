@@ -26,7 +26,8 @@ const toBinSteps = x => {
   console.log(`Binär: ${neg ? '-' : ''}${bin}`);
   return (neg ? '-' : '') + bin;
 };
-//toBinSteps(5987);
+toBin(3577);
+toBin(1456);
 console.log("-----------");
 
 function hexToBin(hexString, { fullPad = false } = {}) {
