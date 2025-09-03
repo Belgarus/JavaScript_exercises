@@ -7,7 +7,7 @@ const toBin = x => {
 };
 
 console.log(toBin(5987)); 
-console.log("-----------")
+console.log("-----------");
 
 const toBinSteps = x => {
   let n = BigInt(x);
