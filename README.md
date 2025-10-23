@@ -1,2 +1,2 @@
 # My JavaScript playground
-Most of the code is absolute garbage
+Most of the code in here is absolute garbage
